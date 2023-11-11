@@ -1,5 +1,8 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
+import Sidebar from '@/components/sidebar/Sidebar'
+import Titlebar from '@/components/titlebar'
+import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -10,8 +13,20 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en">      
+      <body className={inter.className}>
+      <ThemeProvider attribute="class" defaultTheme="system">
+        <div className='flex flex-row w-screen h-screen'>
+          <Sidebar/>
+          <div className='flex flex-col w-[calc(100%-256px)] h-screen'>
+            <div className='w-full flex justify-center items-center h-14 border-b font-bold'><Titlebar/></div>
+            <div className='w-full flex justify-center h-[calc(100%-56px)] pt-6'>
+              {children}
+            </div>
+          </div>
+        </div>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }
