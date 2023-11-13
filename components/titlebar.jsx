@@ -6,7 +6,7 @@ function Titlebar() {
   let path = usePathname()
   return (
     <>
-     {path=='/publications' && 'Publish a Book'}
+     {path=='/publications' && 'Publications'}
     </>
   )
 }

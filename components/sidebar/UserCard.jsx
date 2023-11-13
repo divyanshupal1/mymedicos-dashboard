@@ -24,8 +24,8 @@ function UserCard() {
         </Avatar>
        
         <div className="user-info ml-3">
-            <div className="name text-sm font-semibold dark:text-white">Rajat Verma</div>
-            <div className="email text-xs text-gray-400 dark:text-gray-600">rajat@gmail.com</div>
+            <div className="name text-sm font-semibold dark:text-white">Divyanshu Pal</div>
+            <div className="email text-xs text-gray-400 dark:text-gray-600 w-32 text-ellipsis overflow-clip">divyanshupal77@gmail.com</div>
         </div>
         <div className='absolute right-2'><Options/></div>
     </div>

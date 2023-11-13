@@ -1,11 +1,19 @@
 "use client";
-import Image from "next/image";
+
 import { Button } from "@/components/ui/button"
-import {db} from '@/lib/firebase'
+
 import { useEffect } from "react";
-import { collection, getDocs, addDoc } from "firebase/firestore"; 
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
+
+
+
+
+
+
 
 export default function Home() {
+  const { toast } = useToast()
   useEffect(() => {
     async function getdata(){
       // const querySnapshot = await getDocs(collection(db, "Publications"));
@@ -27,8 +35,21 @@ export default function Home() {
     getdata()
   })
   return (
-    <main className="flex items-center justify-between">
-      <Button>Click me</Button>
+    <>
+
+    <main className="flex items-center justify-between">      
+    <Button
+      onClick={() => {
+        toast({
+          title: "Scheduled: Catch up",
+          description: "Friday, February 10, 2023 at 5:57 PM",
+        })
+      }}
+    >
+      Show Toast
+    </Button>
     </main>
+    </>
+
   );
 }
