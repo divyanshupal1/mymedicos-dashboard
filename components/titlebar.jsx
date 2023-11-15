@@ -12,6 +12,8 @@ function Titlebar() {
      {path=='/pguploads' && 'PG Uploads'}
      {path=='/updates' && 'University Updates'}
      {path=='/sliders' && 'Sliders'}
+     {path=='/pguploads/daily' && 'Daily Quiz'}
+     {path=='/pguploads/weekly' && 'Weekly Quiz'}
      
     </>
   )
