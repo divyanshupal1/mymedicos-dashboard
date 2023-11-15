@@ -3,13 +3,7 @@ import React ,{useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Dialog,
   DialogContent,
@@ -27,73 +21,36 @@ import { db,storage } from "@/lib/firebase"
 import { collection, addDoc } from "firebase/firestore"; 
 import { v4 } from "uuid"
   
-export function AddPublication({reload}) {  
+export function AddUpdates({reload}) {  
     const {toast} = useToast();
-  
-    const [file, setFile] = useState(null);
-    const [fileUrl, setFileUrl] = useState("");
-    const [fileSubmitStatus, setFileSubmitStatus] = useState(4); // 0: not submitted, 1: submitted, 2: error , 3: filetype error
-    const [fileSubmitProgress, setFileSubmitProgress] = useState(0);
-  
+    
     const [thumbnail, setThumbnail] = useState(null);
     const [thumbnailUrl, setThumbnailUrl] = useState("");
     const [thumbnailSubmitStatus, setThumbnailSubmitStatus] = useState(4);
     const [thumbnailSubmitProgress, setThumbnailSubmitProgress] = useState(0);
   
     const [title, setTitle] = useState("");
-    const [author, setAuthor] = useState("");
-    const [price, setPrice] = useState(0);
-    const [category, setCategory] = useState("Free");
+    const [description, setDescription] = useState("");
+    const [action, setAction] = useState("");
     const [publishStatus, setPublishStatus] = useState(0);
   
     const [flag, setFlag] = useState(false);
 
     function reset(){
-      setAuthor("");
+      setDescription("");
       setTitle("");
-      setPrice(0);
-      setCategory("Free");
+      setAction("");
       setThumbnail(null);
-      setFile(null);
-      setThumbnailUrl("");
-      setFileUrl("");
+      setThumbnailUrl(""); 
       setThumbnailSubmitStatus(4);
-      setFileSubmitStatus(4);
     }
     useEffect(()=>{
-      if(file && thumbnail && title.length > 0 && author.length > 0 && Number(price) > -1 && category.length > 0 && fileUrl != null && thumbnailUrl != null){
+      if(thumbnail && thumbnailUrl.length>0 && title.length > 0 && description.length > 0 && action.length > 0 && thumbnailUrl != null){
         setFlag(true);
       }
       else setFlag(false);
-    },[title,author,price,category,fileUrl,thumbnailUrl,file,thumbnail])
-  
-    async function uploadfile(e){
-      setFile(()=>e.target.files[0]);
-      setFileSubmitStatus(0);
-      if(!e.target.files[0]){
-        setThumbnailSubmitStatus(3);
-        return;
-      }
-      const storageRef = ref(storage, 'Publications/files/'+v4()+e.target.files[0].name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      setFileSubmitStatus(0);
-      uploadTask.on('state_changed', 
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setFileSubmitProgress(progress);
-        }, 
-        (error) => {
-          setFileSubmitStatus(2);
-        }, 
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setFileUrl(downloadURL);
-            setFileSubmitStatus(1);
-            console.log(downloadURL);
-          });
-        }
-      );
-    }
+    },[title,thumbnailUrl,thumbnail,description,action])
+
     async function uploadThumbnail(e){
       setThumbnail((prev)=>e.target.files[0]);
       setThumbnailSubmitStatus(0);
@@ -101,7 +58,7 @@ export function AddPublication({reload}) {
         setThumbnailSubmitStatus(3);
         return;
       }
-      const storageRef = ref(storage, 'Publications/thumbnails/'+v4()+e.target.files[0].name);
+      const storageRef = ref(storage, 'Updates/thumbnails/'+v4()+e.target.files[0].name);
       const uploadTask = uploadBytesResumable(storageRef, e.target.files[0]);
       uploadTask.on('state_changed', 
         (snapshot) => {
@@ -123,17 +80,15 @@ export function AddPublication({reload}) {
     async function Publish(){
       setPublishStatus(1);
       try{
-        const docRef = await addDoc(collection(db, "Publications"), {
-          Author: author,
+        const docRef = await addDoc(collection(db, "Updates"), {
           Title: title,
-          Price: Number(price),
-          Category:category,
+          Description: description,
+          Action: action,
           thumbnail: thumbnailUrl,
-          URL: fileUrl,
           Time: new Date().toISOString(),
         });
         toast({
-          title: "Publication Added",
+          title: "Update Added!",
         })
         setPublishStatus(0);
         reload();
@@ -151,42 +106,29 @@ export function AddPublication({reload}) {
     return (
       <Dialog onOpenChange={reset}>
         <DialogTrigger asChild>
-          <Button variant="secondary"  className="gap-x-2"><MdAdd className="scale-125"/> Add Publication</Button>
+          <Button variant="secondary"  className="gap-x-2"><MdAdd className="scale-125"/> Add Updates</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] max-h-[calc(100vh-50px)] overflow-y-scroll scrollbar-hidden">
           <DialogHeader>
-            <DialogTitle>Add new Publication</DialogTitle>
+            <DialogTitle>Add Updates</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
           <form>
             <div className="grid w-full items-center gap-5">
               <div className="flex flex-col space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input id="title" placeholder="Title of the Book" value={title} 
+                <Label htmlFor="title">Update Title</Label>
+                <Input id="title" placeholder="Update Title" value={title} 
                   className={`${title.length > 1 ? "" : "outline outline-red-600"}`}
                   onChange={(e)=>setTitle(e.target.value)} 
                 />
               </div>
-              <div className="flex flex-col space-y-2">
-                <Label htmlFor="author">Author</Label>
-                <Input id="author" className={`${author.length > 1 ? "" : "outline outline-red-600"}`} placeholder="Author of the Book" value={author} onChange={(e)=>setAuthor(e.target.value)} />
+              <div className="grid w-full gap-1.5">
+                <Label htmlFor="message">Description</Label>
+                <Textarea className={`max-h-[200px] ${description.length > 1 ? "" : "outline outline-red-600"}`} placeholder="Description" id="message" value={description} onChange={(e)=>setDescription(e.target.value)} />
               </div>
               <div className="flex flex-col space-y-2">
-                <Label htmlFor="Category">Category</Label>
-                <Select onValueChange={(value)=>setCategory(value)} defaultValue="ALL">
-                  <SelectTrigger id="framework">
-                    <SelectValue placeholder="Select" value={category}  />
-                  </SelectTrigger>
-                  <SelectContent position="popper" >
-                    <SelectItem value="ALL">All</SelectItem>
-                    <SelectItem value="FREE">Free</SelectItem>
-                    <SelectItem value="PAID">Paid</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <Label htmlFor="price">Price</Label>
-                <Input id="price" className={`${Number(price) > -1 ? "" : "outline outline-red-600"}`} type='number' placeholder="0" value={price} onChange={(e)=>setPrice(e.target.value)} />
+                <Label htmlFor="author">Action</Label>
+                <Input id="author" className={`${action.length > 1 ? "" : "outline outline-red-600"}`} placeholder="Update Action" value={action} onChange={(e)=>setAction(e.target.value)} />
               </div>
               <div className="flex flex-col space-y-1.5 relative">
                 <Label htmlFor="price">Select Thumbnail</Label>
@@ -203,21 +145,8 @@ export function AddPublication({reload}) {
                   {thumbnailSubmitStatus == 0 && thumbnail && <AiOutlineLoading3Quarters className="text-green-600 font-bold animate-spin"/>}
                  </div>
               </div>
-              <div className="flex flex-col space-y-1.5 relative">
-                <Label htmlFor="price">Upload File</Label>
-                <Input id="price"  
-                  className={`${file ? "" : "outline outline-red-600"}`}              
-                  onChange={(e)=>{                  
-                    uploadfile(e);
-                  }}
-                 type='file' 
-                 />
-                 <div className="scale-125 absolute right-1.5 bottom-1.5  p-1 rounded bg-white dark:bg-slate-950">
-                  {fileSubmitStatus == 1 && file && <IoCloudDone className="text-green-600 font-bold "/>}
-                  {fileSubmitStatus == 0 && file && <AiOutlineLoading3Quarters className="text-green-600 font-bold animate-spin"/>}
-                 </div>
-           
-              </div>
+              {thumbnailUrl.length > 0 && <div className="flex flex-col space-y-1.5 relative w-full h-52 rounded-md" style={{background:`url(${thumbnailUrl})`}}></div>}
+          
             </div>
           </form>
           </div>

@@ -7,6 +7,12 @@ function Titlebar() {
   return (
     <>
      {path=='/publications' && 'Publications'}
+     {path=='/news' && 'News'}
+     {path=='/uguploads' && 'UG Uploads'}
+     {path=='/pguploads' && 'PG Uploads'}
+     {path=='/updates' && 'University Updates'}
+     {path=='/sliders' && 'Sliders'}
+     
     </>
   )
 }
