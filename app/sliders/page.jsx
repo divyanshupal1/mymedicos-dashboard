@@ -19,6 +19,7 @@ export default function Home() {
     LoadPublications();
   },[]);
 
+  if(docs.length===0) return <></>
 
   return (
     <>
