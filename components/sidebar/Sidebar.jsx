@@ -22,7 +22,6 @@ function Sidebar() {
   return (
     <div className='w-64 border-r h-screen flex flex-col gap-y-2 px-5'>
         <div className="logo py-4 mx-[-20px]"><Logo/></div>
-        <div className="user w-full"><UserCard/></div>
         <div className="navigation flex flex-col gap-y-3 mt-5 ">
             <Navigation/>
         </div>

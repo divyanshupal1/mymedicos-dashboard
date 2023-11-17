@@ -32,14 +32,7 @@ export function CardWithForm() {
       })
     }
 
-    function SignMeOUT(){
-      fetch("/api/auth/logout", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json()).then((data)=>console.log(data))
-    }
+
 
 
     return (
@@ -62,9 +55,8 @@ export function CardWithForm() {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex justify-center">
           <Button onClick={SignMeIN}>Login</Button>
-          <Button onClick={SignMeOUT} >LogOut</Button>
         </CardFooter>
       </Card>
     )

@@ -9,9 +9,9 @@ export function middleware(request) {
   const isPublicPath = path === '/login' || path === '/signup' || path === '/verifyemail'
 
   const token = request.cookies.get('token')?.value || ''
-  const decoded =  jwt.decode(token, process.env.NEXTAUTH_SECRET, {expiresIn: "1d"})
-  console.log(decoded);
-  if(isPublicPath && token) {
+  const {role} =  jwt.decode(token, process.env.NEXTAUTH_SECRET, {expiresIn: "1d"})
+  
+  if(isPublicPath && token && role === "admin+") {
     return NextResponse.redirect(new URL('/', request.nextUrl))
   }
 
@@ -26,7 +26,7 @@ export function middleware(request) {
 export const config = {
   matcher: [
     '/',
-    '/dashboard',
+    '/dashboard/:path*',
     '/login',
     '/signup',
     '/verifyemail'

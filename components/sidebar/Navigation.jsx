@@ -9,8 +9,8 @@ export default function Navigation({active,href,children}){
         <>
             <Navtab href='/dashboard/publications' active={path.split('/')[2] === 'publications'?true:false} >Publications</Navtab>
             <Navtab href='/dashboard/news' active={path.split('/')[2] === 'news'?true:false} >News</Navtab>
-            <Navtab href='/dashboard/uguploads' active={path.split('/')[1] === 'uguploads'?true:false} >UG Uploads</Navtab>
-            <Navtab href='/dashboard/pguploads' active={path.split('/')[1] === "pguploads"?true:false} >PG Uploads</Navtab>
+            <Navtab href='/dashboard/uguploads' active={path.split('/')[2] === 'uguploads'?true:false} >UG Uploads</Navtab>
+            <Navtab href='/dashboard/pguploads' active={path.split('/')[2] === "pguploads"?true:false} >PG Uploads</Navtab>
             <Navtab href='/dashboard/updates' active={path.split('/')[2] === 'updates'?true:false}>University Updates</Navtab>
             <Navtab href='/dashboard/sliders' active={path.split('/')[2] === 'sliders'?true:false}>Sliders</Navtab>
         </>

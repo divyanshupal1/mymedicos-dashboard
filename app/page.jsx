@@ -8,7 +8,7 @@ import React from 'react'
 
   return (
     <div className='w-full h-screen flex justify-center items-center'>
-      <Link href={"/dashboard/publications"}><div className='p-3 rounded-md bg-primary'>Go to Dashboard</div></Link>
+      <Link href={"/dashboard"}><div className='p-3 rounded-md bg-primary'>Go to Dashboard</div></Link>
     </div>
   )
 }
