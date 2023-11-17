@@ -6,9 +6,19 @@ import Navigation from './Navigation'
 import UserCard from './UserCard'
 import {MdOutlineLogout} from 'react-icons/md'
 import { useSession, signIn, signOut } from "next-auth/react"
-
+import {useRouter} from "next/navigation";
+import axios from 'axios'
 
 function Sidebar() {
+    const router = useRouter()
+    const logout = async () => {
+        try {
+            await axios.get('/api/auth/logout')
+            router.push('/login')
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
   return (
     <div className='w-64 border-r h-screen flex flex-col gap-y-2 px-5'>
         <div className="logo py-4 mx-[-20px]"><Logo/></div>
@@ -17,7 +27,7 @@ function Sidebar() {
             <Navigation/>
         </div>
         <div className='align-bottom mt-auto mb-5 w-full flex justify-between gap-x-4'>
-            <div className='p-1.5 px-4 gap-x-3 cursor-pointer rounded-lg flex items-center border flex-grow hover:bg-slate-400 hover:bg-opacity-10 ' onClick={signOut}><MdOutlineLogout/> Logout</div>
+            <div className='p-1.5 px-4 gap-x-3 cursor-pointer rounded-lg flex items-center border flex-grow hover:bg-slate-400 hover:bg-opacity-10 ' onClick={logout}><MdOutlineLogout/> Logout</div>
             <ModeToggle/>
         </div>
     </div>

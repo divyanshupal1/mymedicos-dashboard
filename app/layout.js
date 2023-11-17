@@ -17,12 +17,12 @@ export default function RootLayout({ children,session }) {
   return (
     <html lang="en">      
       <body className={inter.className}>
-      <Provider>
+      {/* <Provider> */}
       <ThemeProvider attribute="class" defaultTheme="system">
         <ToastProvider/>
           {children}
         </ThemeProvider>
-      </Provider>
+      {/* </Provider> */}
       </body>
     </html>
   )

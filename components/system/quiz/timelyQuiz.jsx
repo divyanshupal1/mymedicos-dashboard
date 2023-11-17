@@ -29,13 +29,13 @@ export function TimelyQuiz(){
   const [submit, setSubmit] = React.useState(false);
  
   function reset(){
-    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: ''}]);
+    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: 'A'}]);
     setCurrent(0);
     setSubmit(false);
   }
   function addQuestion(){
     if(data.length < 30){
-        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: ''}]);
+        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A'}]);
         setCurrent((prev)=>prev+1);
     }
   }

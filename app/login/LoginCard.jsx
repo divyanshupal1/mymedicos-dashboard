@@ -12,11 +12,36 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useSession, signIn, signOut } from "next-auth/react"
+import { useRouter } from 'next/navigation'
 export function CardWithForm() {
-    const {data} = useSession()
-    console.log(data)
+    const router = useRouter()
     const [username, setUsername] = React.useState("")
     const [password, setPassword] = React.useState("")
+
+    function SignMeIN(){
+      fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username:username, password:password }),
+      }).then((res) => res.json()).then((data)=>{
+        if(data.success) {
+          router.push("/dashboard/publications")
+        }
+      })
+    }
+
+    function SignMeOUT(){
+      fetch("/api/auth/logout", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json()).then((data)=>console.log(data))
+    }
+
+
     return (
       <Card className="w-[350px]">
         <CardHeader>
@@ -38,8 +63,8 @@ export function CardWithForm() {
           </form>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button onClick={()=>signIn("credentials", { username: username, password: password })}>Login</Button>
-          <Button onClick={signOut}>LogOut</Button>
+          <Button onClick={SignMeIN}>Login</Button>
+          <Button onClick={SignMeOUT} >LogOut</Button>
         </CardFooter>
       </Card>
     )

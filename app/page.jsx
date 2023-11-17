@@ -1,12 +1,15 @@
 "use client"
+import Link from 'next/link'
 import React from 'react'
-import { useSession, signIn, signOut } from "next-auth/react"
+
 
 
  function Page() {
 
   return (
-    <div><button onClick={signIn}>Login</button></div>
+    <div className='w-full h-screen flex justify-center items-center'>
+      <Link href={"/dashboard/publications"}><div className='p-3 rounded-md bg-primary'>Go to Dashboard</div></Link>
+    </div>
   )
 }
 
