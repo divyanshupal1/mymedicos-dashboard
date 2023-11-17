@@ -4,17 +4,17 @@ import { usePathname } from 'next/navigation'
 
 function Titlebar() {
   let path = usePathname()
+  var title = path.split('/')
+  if(title.length>2){
+      title = title[2]
+  }
+  else{
+      title = title[1]
+  }
+  title = title.charAt(0).toUpperCase() + title.slice(1)
   return (
     <>
-     {path=='/publications' && 'Publications'}
-     {path=='/news' && 'News'}
-     {path=='/uguploads' && 'UG Uploads'}
-     {path=='/pguploads' && 'PG Uploads'}
-     {path=='/updates' && 'University Updates'}
-     {path=='/sliders' && 'Sliders'}
-     {path=='/pguploads/daily' && 'Daily Quiz'}
-     {path=='/pguploads/weekly' && 'Weekly Quiz'}
-     
+     {title}
     </>
   )
 }

@@ -1,17 +1,14 @@
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from '@/lib/firebase';
 import { NextResponse } from "next/server"
+import { Timestamp } from "firebase/firestore";
 
 export async function GET(req) {
     var  data = []
-    var today = new Date().toDateString();
-    const q = query(collection(db, "PGupload", "Daily", "Quiz"), where("Date", "==", today));
+    const q = query(collection(db, "PGupload", "Weekley", "Quiz"));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      data = doc.data()
+    querySnapshot.forEach((doc) => {        
+        data.push(doc.data())          
     });
-
     return new NextResponse(JSON.stringify(data),{status: 200, headers: { 'Content-Type': 'application/json' }})  
-
 }

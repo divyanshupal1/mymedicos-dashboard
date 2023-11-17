@@ -2,9 +2,7 @@ import { getData } from "@/lib/docFunctions"
 import { NextResponse } from "next/server"
 
 export async function GET(req,{params}) {
-    console.log(params)
     const temp = await getData("Sliders")
-    console.log(temp)//[[id,{images:[{id,url,action},{id,url,action}]}],[id,{images:[{id,url,action},{id,url,action}]}]]
     var data = []
     temp.forEach((slider,index)=>{
         var id = slider[0]
@@ -19,7 +17,7 @@ export async function GET(req,{params}) {
                 filteredData = slider;
             }   
         }) 
-        return new NextResponse(JSON.stringify(filteredData),{status: 200, headers: { 'Content-Type': 'application/json' }})           
+        return new NextResponse(JSON.stringify(filteredData[1]),{status: 200, headers: { 'Content-Type': 'application/json' }})           
     }
     return new NextResponse(JSON.stringify(data),{status: 200, headers: { 'Content-Type': 'application/json' }})  
 

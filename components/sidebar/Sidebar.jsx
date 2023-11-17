@@ -5,6 +5,7 @@ import { ModeToggle } from '../theme-toggle'
 import Navigation from './Navigation'
 import UserCard from './UserCard'
 import {MdOutlineLogout} from 'react-icons/md'
+import { useSession, signIn, signOut } from "next-auth/react"
 
 
 function Sidebar() {
@@ -16,7 +17,7 @@ function Sidebar() {
             <Navigation/>
         </div>
         <div className='align-bottom mt-auto mb-5 w-full flex justify-between gap-x-4'>
-            <div className='p-1.5 px-4 gap-x-3 cursor-pointer rounded-lg flex items-center border flex-grow hover:bg-slate-400 hover:bg-opacity-10 '><MdOutlineLogout/> Logout</div>
+            <div className='p-1.5 px-4 gap-x-3 cursor-pointer rounded-lg flex items-center border flex-grow hover:bg-slate-400 hover:bg-opacity-10 ' onClick={signOut}><MdOutlineLogout/> Logout</div>
             <ModeToggle/>
         </div>
     </div>

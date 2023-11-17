@@ -67,7 +67,7 @@ export function AddDailyQuiz(){
   return (
     <Dialog onOpenChange={reset}>
       <DialogTrigger asChild>
-        <Button variant="outline"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
+        <Button variant="secondary"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

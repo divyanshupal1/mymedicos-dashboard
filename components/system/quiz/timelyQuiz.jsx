@@ -27,7 +27,7 @@ export function TimelyQuiz(){
   const [date, setDate] = React.useState();
   const [current, setCurrent] = React.useState(0);
   const [submit, setSubmit] = React.useState(false);
-    console.log(date)
+ 
   function reset(){
     setData([{Question: '', A: '', B: '', C: '', D: '', Correct: ''}]);
     setCurrent(0);
@@ -77,7 +77,8 @@ export function TimelyQuiz(){
     setSubmit(true);
     await setDoc(doc(db, "PGupload", "Weekley", "Quiz",v4()), {
       Data:data,
-      Date: date,
+      from: date.from,
+      to: date.to
     }).then(()=>{
       setSubmit(false);
       toast({
@@ -92,7 +93,7 @@ export function TimelyQuiz(){
   return (
     <Dialog onOpenChange={reset}>
       <DialogTrigger asChild>
-        <Button variant="outline"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
+        <Button variant="secondary"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
@@ -124,10 +125,6 @@ export function TimelyQuiz(){
     </Dialog>
   )
 }
-
-
-
-
 export default function QuizComp({quiz, index,setQuiz}) {
   return (
     <>
