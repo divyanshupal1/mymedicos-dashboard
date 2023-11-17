@@ -18,8 +18,6 @@ export default function Updates() {
      const querySnapshot = await getDocs(collection(db, "Updates"));
      var temp = []
      querySnapshot.forEach((doc) => {
-       // doc.data() is never undefined for query doc snapshots
-       console.log(doc.id, " => ", doc.data());
        temp = [...temp,[doc.id,doc.data()]];
      });
      setDocs(temp)

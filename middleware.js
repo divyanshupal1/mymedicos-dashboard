@@ -6,13 +6,15 @@ import jwt from "jsonwebtoken";
 export function middleware(request) {
   const path = request.nextUrl.pathname
 
-  const isPublicPath = path === '/login' || path === '/signup' || path === '/verifyemail'
+  const isPublicPath = path === '/login' || path === '/signup'
 
   const token = request.cookies.get('token')?.value || ''
-  const {role} =  jwt.decode(token, process.env.NEXTAUTH_SECRET, {expiresIn: "1d"})
-  
+  const decoded =  jwt.decode(token, process.env.NEXTAUTH_SECRET, {expiresIn: "1d"})
+  const role = decoded?.role || ''
+
+
   if(isPublicPath && token && role === "admin+") {
-    return NextResponse.redirect(new URL('/', request.nextUrl))
+    return NextResponse.redirect(new URL('/dashboard/publications', request.nextUrl))
   }
 
   if (!isPublicPath && !token) {

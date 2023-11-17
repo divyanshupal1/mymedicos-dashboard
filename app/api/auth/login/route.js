@@ -22,7 +22,7 @@ export async function POST(request){
         });
 
         if(!user){
-            return NextResponse.json({error: "User does not exist"}, {status: 400})
+            return NextResponse.json({success:false}, {status: 200})
         }
         console.log("user exists");
         console.log("user: ", user)
@@ -30,10 +30,8 @@ export async function POST(request){
         //check if password is correct
         const validPassword = password === user.password?true:false;
         if(!validPassword){
-            return NextResponse.json({error: "Invalid password"}, {status: 400})
-        }
-        console.log(user);
-        
+            return NextResponse.json({success:false}, {status: 200})
+        }        
         //create token data
         const tokenData = {
             username: user.username,
@@ -41,7 +39,7 @@ export async function POST(request){
             role: user.role
         }
         //create token
-        const token = await jwt.sign(tokenData, process.env.NEXTAUTH_SECRET, {expiresIn: "1d"})
+        const token = jwt.sign(tokenData, process.env.NEXTAUTH_SECRET, {expiresIn: "1d"})
 
         const response = NextResponse.json({
             message: "Login successful",

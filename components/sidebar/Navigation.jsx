@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation'
 
 export default function Navigation({active,href,children}){
     let path = usePathname()
-    console.log(path.split('/'))
     return (
         <>
             <Navtab href='/dashboard/publications' active={path.split('/')[2] === 'publications'?true:false} >Publications</Navtab>

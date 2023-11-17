@@ -5,7 +5,6 @@ import { ModeToggle } from '../theme-toggle'
 import Navigation from './Navigation'
 import UserCard from './UserCard'
 import {MdOutlineLogout} from 'react-icons/md'
-import { useSession, signIn, signOut } from "next-auth/react"
 import {useRouter} from "next/navigation";
 import axios from 'axios'
 

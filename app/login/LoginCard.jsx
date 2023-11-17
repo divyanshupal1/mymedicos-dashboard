@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from 'next/navigation'
 export function CardWithForm() {
     const router = useRouter()
@@ -28,6 +27,9 @@ export function CardWithForm() {
       }).then((res) => res.json()).then((data)=>{
         if(data.success) {
           router.push("/dashboard/publications")
+        }
+        else{ 
+          alert("Invalid Credentials")
         }
       })
     }

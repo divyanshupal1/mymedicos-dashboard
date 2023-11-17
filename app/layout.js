@@ -3,7 +3,7 @@ import './globals.css'
 
 import { ThemeProvider } from "@/components/theme-provider"
 import ToastProvider from '@/components/toastProvider'
-import Provider from '@/lib/authProvider'
+
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -17,12 +17,12 @@ export default function RootLayout({ children,session }) {
   return (
     <html lang="en">      
       <body className={inter.className}>
-      {/* <Provider> */}
+
       <ThemeProvider attribute="class" defaultTheme="system">
         <ToastProvider/>
           {children}
         </ThemeProvider>
-      {/* </Provider> */}
+
       </body>
     </html>
   )
