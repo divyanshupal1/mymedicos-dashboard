@@ -1,8 +1,13 @@
 import React from 'react'
 
-function News() {
+import Ugcards from './ugcard';
+import { Button } from '@/components/ui/button';
+
+async function News() {
   return (
-    <div>Newsiv</div>
+    <div className='w-full h-full flex flex-col'>
+    <Ugcards/>
+    </div>
   )
 }
 

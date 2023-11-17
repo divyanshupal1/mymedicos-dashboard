@@ -3,7 +3,7 @@
 import React, { useEffect } from "react"
 import { AddPublication } from "@/components/system/publications/AddPublication"
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
-import { db,storage } from "@/lib/firebase"
+import { db } from "@/lib/firebase"
 import { collection,getDocs} from "firebase/firestore"; 
 import Image from "next/image"
 import { toast } from "@/components/ui/use-toast"
