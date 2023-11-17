@@ -3,16 +3,16 @@ import React from 'react'
 
 import { ModeToggle } from '../theme-toggle'
 import Navigation from './Navigation'
-import UserCard from './UserCard'
 import {MdOutlineLogout} from 'react-icons/md'
 import {useRouter} from "next/navigation";
-import axios from 'axios'
 
 function Sidebar() {
     const router = useRouter()
     const logout = async () => {
         try {
-            await axios.get('/api/auth/logout')
+            await fetch('/api/auth/logout', {
+                method: 'GET',
+            })
             router.push('/login')
         } catch (error) {
             console.log(error.message);
