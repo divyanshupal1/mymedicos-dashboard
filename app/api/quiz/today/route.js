@@ -11,6 +11,6 @@ export async function GET(req) {
       data = doc.data()
     });
 
-    return new NextResponse(JSON.stringify(data),{status: 200, headers: { 'Content-Type': 'application/json' }})  
+    return new NextResponse(JSON.stringify({status:"success",data:[data]}),{status: 200, headers: { 'Content-Type': 'application/json' }})  
 
 }

@@ -21,5 +21,5 @@ export async function GET(req,{params}) {
         var temp = {id:doc.id,data:doc.data()};
         data.push(temp);
     });
-    return new NextResponse(JSON.stringify(data),{status: 200, headers: { 'Content-Type': 'application/json' }}) ;
+    return new NextResponse(JSON.stringify({status:"success",data:data}),{status: 200, headers: { 'Content-Type': 'application/json' }}) ;
 }
