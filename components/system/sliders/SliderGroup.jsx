@@ -15,7 +15,7 @@ export default SliderGroup
 
 function SliderCard({slider,reload}){
     return(
-        <div className='w-full h-[320px] overflow-hidden bg-slate-800 border bg-opacity-20 rounded-md p-4 '>
+        <div className='w-full h-[320px] shrink-0 overflow-hidden bg-slate-800 border bg-opacity-20 rounded-md p-4 '>
             <div className='w-full flex justify-between items-center'>
                 <div className='font-bold text-lg'>{slider[0]}</div>
                 <div><EditDialog reload={reload} data={slider}/></div>

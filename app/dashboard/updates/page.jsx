@@ -15,7 +15,8 @@ export default function Updates() {
 
  async function LoadUpdates(){
    try{
-     const querySnapshot = await getDocs(collection(db, "Updates"));
+
+     const querySnapshot = await getDocs(collection(db, "Updates","Uttar Pradesh","Galgotias University"));
      var temp = []
      querySnapshot.forEach((doc) => {
        temp = [...temp,[doc.id,doc.data()]];
@@ -23,7 +24,8 @@ export default function Updates() {
      setDocs(temp)
      setLoading(false)
    }
-   catch{
+   catch(e){
+    console.log(e)
     toast({
       variant: "destructive",
       title: "Error Loading Publications",
@@ -34,6 +36,7 @@ export default function Updates() {
     LoadUpdates();
   },[]);
 
+  console.log(docs)
 
   return (
     <>
@@ -47,7 +50,8 @@ export default function Updates() {
               <AiOutlineLoading3Quarters className="animate-spin text-4xl text-slate-300"/>
             </div> 
             :
-            <UpdateCardGroup docs={docs} reload={LoadUpdates}/>
+            <></>
+            // <UpdateCardGroup docs={docs} reload={LoadUpdates}/>
           }
       </div>
 

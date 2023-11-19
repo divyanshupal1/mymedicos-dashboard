@@ -23,6 +23,7 @@ import { v4 } from "uuid"
 
 export function TimelyQuiz(){
   const {toast} = useToast();
+  const [quizTitle, setQuizTitle] = React.useState('');
   const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...'}]);
   const [date, setDate] = React.useState();
   const [current, setCurrent] = React.useState(0);
@@ -76,6 +77,7 @@ export function TimelyQuiz(){
     
     setSubmit(true);
     await setDoc(doc(db, "PGupload", "Weekley", "Quiz",v4()), {
+      title: quizTitle,
       Data:data,
       from: date.from,
       to: date.to
@@ -95,7 +97,7 @@ export function TimelyQuiz(){
       <DialogTrigger asChild>
         <Button variant="secondary"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[580px]">
         <DialogHeader>
           <DialogTitle>Add Quiz</DialogTitle>
           <DialogDescription>
@@ -103,21 +105,26 @@ export function TimelyQuiz(){
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4 w-full">
+            <div className="flex flex-col space-y-2">
+                <Label htmlFor="name">Quiz Title</Label>
+                <Input id="name" value={quizTitle} onChange={(e)=>setQuizTitle(e.target.value)} placeholder="Title of Quiz" />
+            </div>
             <div className="w-full flex flex-wrap  gap-x-1 gap-y-1 bg-secondary p-2 rounded-md">
                 {data.map((item, index)=><div key={index} className={`w-7 h-7 flex justify-center items-center rounded-full cursor-pointer ${current==index?"bg-primary":""}`} tabIndex={index} onClick={()=>setCurrent(index)} >{index+1}</div>)}
             </div>
             <div className="w-full mt-3">
                 <QuizComp quiz={data[current]} index={current} setQuiz={setQuiz}/>
             </div>
-            <div className="w-full">
-                <Button variant="outline" className="w-full bg-secondary" onClick={()=>deleteQuestion(current)}>Delete Question {current+1}</Button>
+            <div className="w-full flex gap-x-5 ">
+                <Button variant="outline" className=" w-1/2 bg-secondary" onClick={()=>deleteQuestion(current)}>Delete Question {current+1}</Button>
+                <Button onClick={addQuestion} className="w-1/2 gap-x-2"><MdAdd className="scale-125"/>Add Question</Button> 
             </div>
             <div className="w-full"><Label>Select Date Range :</Label><DatePickerWithRange setNewDate={setDate} className={"w-full"}/></div>
         </div>
         <DialogFooter>      
             <div className="w-full flex justify-between">
-                <Button onClick={addQuestion} variant="secondary" className="gap-x-2"><MdAdd className="scale-125"/>Add Question</Button> 
-                <Button disabled={submit} onClick={addQuiz}>{submit?<><div className="scale-125 mr-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Adding..</>:"Submit Quiz"}</Button>
+             
+                <Button disabled={submit} className={'w-full'} onClick={addQuiz}>{submit?<><div className="scale-125 mr-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Adding..</>:"Submit Quiz"}</Button>
             </div>         
                 
          </DialogFooter>

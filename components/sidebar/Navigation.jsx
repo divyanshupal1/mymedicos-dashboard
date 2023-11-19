@@ -12,6 +12,7 @@ export default function Navigation({active,href,children}){
             <Navtab href='/dashboard/pguploads' active={path.split('/')[2] === "pguploads"?true:false} >PG Uploads</Navtab>
             <Navtab href='/dashboard/updates' active={path.split('/')[2] === 'updates'?true:false}>University Updates</Navtab>
             <Navtab href='/dashboard/sliders' active={path.split('/')[2] === 'sliders'?true:false}>Sliders</Navtab>
+            <Navtab href='/dashboard/slideshow' active={path.split('/')[2] === 'slideshow'?true:false}>Slideshow</Navtab>
         </>
     )
 }
