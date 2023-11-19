@@ -8,9 +8,9 @@ export async function GET(req) {
     const q = query(collection(db, "PGupload", "Daily", "Quiz"), where("Date", "==", today));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      data = doc.data()
+      data.push(doc.data())
     });
 
-    return new NextResponse(JSON.stringify({status:"success",data:[data]}),{status: 200, headers: { 'Content-Type': 'application/json' }})  
+    return new NextResponse(JSON.stringify({status:"success",data:data}),{status: 200, headers: { 'Content-Type': 'application/json' }})  
 
 }
