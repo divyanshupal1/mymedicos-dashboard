@@ -112,7 +112,7 @@ export function EditDialog({reload,data}){
           </div>
           <DialogFooter >
             <div className={"flex justify-between w-full items-center gap-x-4"}>
-            <Button onClick={addImage} variant="secondary" className="gap-x-2"><MdAdd className="scale-125"/>Add Banner Image</Button> 
+            <Button onClick={addImage} variant="secondary" className="gap-x-2"><MdAdd className="scale-125"/>Add Thumbnail</Button> 
             <Button  onClick={Publish}>{publishStatus==0?"Update":<><div className="scale-125 gap-x-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Updating..</>}</Button>
             </div>
 
@@ -170,7 +170,7 @@ function ImageComp({doc,index,fulldoc,setDoc}){
     return (       
       <div className='border-2 w-full p-3 rounded-md flex flex-col gap-y-3 min-w-[250px] max-w-[280px]' >
         <div className="flex flex-col space-y-1.5 relative">
-            <Label htmlFor="price">Select Banner Image</Label>
+            <Label htmlFor="price">Select Thumbnail Image</Label>
             <Input id="price"
               accept="image/png, image/jpeg"
               className={`${imgUrl ? "" : "outline outline-red-600"}`}
