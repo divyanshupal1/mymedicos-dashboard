@@ -15,6 +15,12 @@ function News() {
       <Link href='/dashboard/pguploads/weekly'>
         <div className='p-3 px-5 bg-primary rounded-full text-white text-lg font-bold'>Weekly Quiz</div>
       </Link>
+      <Link href='/dashboard/pguploads/notes'>
+        <div className='p-3 px-5 bg-primary rounded-full text-white text-lg font-bold'>Notes</div>
+      </Link>
+      <Link href='/dashboard/pguploads/videos'>
+        <div className='p-3 px-5 bg-primary rounded-full text-white text-lg font-bold'>Videos</div>
+      </Link>
 
     </div>
   )
