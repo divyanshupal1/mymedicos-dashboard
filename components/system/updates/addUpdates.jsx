@@ -21,7 +21,7 @@ import { db,storage } from "@/lib/firebase"
 import { collection, addDoc } from "firebase/firestore"; 
 import { v4 } from "uuid"
   
-export function AddUpdates({reload}) {  
+export function AddUpdates({reload,state,uni}) {  
     const {toast} = useToast();
     
     const [thumbnail, setThumbnail] = useState(null);
@@ -80,7 +80,7 @@ export function AddUpdates({reload}) {
     async function Publish(){
       setPublishStatus(1);
       try{
-        const docRef = await addDoc(collection(db, "Updates"), {
+        const docRef = await addDoc(collection(db, "Updates",state,uni), {
           Title: title,
           Description: description,
           Action: action,

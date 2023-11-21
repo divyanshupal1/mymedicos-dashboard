@@ -11,22 +11,22 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 
 
-export function UpdateCardGroup({docs,reload}){
+export function UpdateCardGroup({docs,reload,state,uni}){
     return (
       <div className="view w-full h-full p-4  flex flex-wrap flex-row gap-4">
-          {docs.map((doc,i) => <Card key={doc[0]} publication={doc[1]} id={doc[0]} reload={reload}/>)}
+          {docs.map((doc,i) => <Card key={doc[0]} publication={doc[1]} id={doc[0]} reload={reload} state={state} uni={uni}/>)}
       </div>
     )
   }
 
-  function Card({publication,id,reload}){
+  function Card({publication,id,reload,state,uni}){
     const {toast} = useToast();
 
     async function DeleteDoc(){
       if(!confirm("Are you sure you want to delete this Update?").valueOf()){
         return;
       }
-      await deleteDoc(doc(db, "Updates", id)).then(
+      await deleteDoc(doc(db, "Updates",state,uni, id)).then(
         ()=>{
           reload();
           toast({

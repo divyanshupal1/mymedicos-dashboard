@@ -2,7 +2,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from '@/lib/firebase';
 import { NextResponse } from "next/server"
 
-export async function GET(req,{params}) {
+export async function GET(req) {
     var  data = []
     const q = query(collection(db, "PGupload", "Daily", "Quiz"));
     const querySnapshot = await getDocs(q);
