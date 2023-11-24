@@ -3,7 +3,7 @@ import { doc,getDoc,getDocs,collection} from "firebase/firestore";
 export const dynamic = 'force-dynamic'
 export async function GET(Request){   
         var temp = []
-        const querySnapshot = await getDocs(collection(db, "Slideshow"));
+        const querySnapshot = await getDocs(collection(db, "SlideShow"));
         querySnapshot.forEach((doc) => {
              temp = [...temp,doc.data()]
         });  

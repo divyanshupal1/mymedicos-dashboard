@@ -12,6 +12,7 @@ export default function Home() {
 
  async function LoadPublications(){
    const temp = await getData("SlideShow")
+   console.log(temp)
    setDocs(temp)
    setLoading(false)
  }
