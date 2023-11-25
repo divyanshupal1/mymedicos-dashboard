@@ -11,7 +11,7 @@ function Page({params}) {
 
     React.useEffect(() => {
         const loadDets = async ()=>{
-            const result = await axios.get("http://localhost:3000/api/ecom/checkout/orderDetails/"+params.orderID);
+            const result = await axios.get(process.env.BASE_URL+"/api/ecom/checkout/orderDetails/"+params.orderID);
             setResult(result);
         }
         loadDets();
@@ -58,7 +58,7 @@ function Page({params}) {
           "name": "MyMedicos",
           "description": `Order for ${result.data.user.Name}`,
           "order_id": order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-          "callback_url": "http://localhost:3000/api/checkout/callback/",
+          "callback_url": `${process.env.BASE_URL}/api/checkout/callback/`,
           "prefill": {
               "name": result.data.user.Name,
               "email": result.data.user["Email ID"],
