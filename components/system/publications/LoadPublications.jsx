@@ -34,20 +34,22 @@ export function CardGroup({docs,reload}){
             title: "Publication Deleted",
           })
         }
-      ).catch(
+      ).catch(()=>
         alert("Error Deleting Publication")
       )
     }
     var date = new Date(publication.Time).toLocaleDateString()
     return (
-      <div className="w-[230px]  p-3 rounded-md overflow-hidden border-2 bg-slate-800 bg-opacity-10 relative">
+      <div className="w-[250px]  p-3 rounded-md overflow-hidden border-2 bg-slate-800 bg-opacity-10 relative">
         <div className="w-full h-48 rounded-md" style={{background:`url(${publication.thumbnail})`,backgroundSize:"cover"}}></div>
-        <div className="w-full mt-4">
-          <div className="text-base w-[206px] overflow-hidden text-ellipsis whitespace-nowrap hover:overflow-visible">Title : {publication.Title}</div>
-          <div className="text-base ">Author : {publication.Author}</div>
-          <div className="text-base ">Category : {publication.Category}</div>
-          <div className="text-base ">Price : {publication.Price}</div>
-          <div className="text-base">Date : {date}</div>
+        <div className="w-full mt-4 relative">
+          <div className="text-base w-[250px] overflow-hidden whitespace-nowrap text-ellipsis  hover:overflow-visible hover:relative"><p className="font-semibold inline">Title</p> : {publication.Title}</div>
+          <div className="text-base "><p className="font-semibold inline">Author</p> : {publication.Author}</div>
+          <div className="text-base "><p className="font-semibold inline">Category</p> : {publication.Category}</div>
+          <div className="text-base "><p className="font-semibold inline">Subject</p> : {publication.Subject}</div>
+          <div className="text-base "><p className="font-semibold inline">Type</p> : {publication.Type}</div>
+          <div className="text-base "><p className="font-semibold inline">Price</p> : {publication.Price}</div>
+          <div className="text-base"><p className="font-semibold inline">Date</p> : {date}</div>
         </div>
         <div className="actions absolute bottom-0 right-0 p-3">
           <DropdownMenu>

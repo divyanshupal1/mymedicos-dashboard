@@ -18,7 +18,8 @@ export async function GET(req,{params}) {
     }
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-        var temp = {id:doc.id,data:doc.data()};
+        var docData = doc.data();
+        var temp = {id:doc.id,data:{...docData,URL:""}};
         data.push(temp);
     });
     return new NextResponse(JSON.stringify({status:"success",data:data}),{status: 200, headers: { 'Content-Type': 'application/json' }}) ;
