@@ -1,19 +1,21 @@
 import Razorpay from "razorpay";
 import { db } from '@/lib/firebase';
 import { doc, setDoc,getDoc,updateDoc  } from "firebase/firestore";
-import { ca } from "date-fns/locale";
+
 
 
 export const dynamic = 'force-dynamic'
 
-var instance = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+
 
 
 
 export async function GET(req,{params}) {
+
+    var instance = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
 
   try{
     const {id} = params
