@@ -114,7 +114,7 @@ function Page({params}) {
             
             <div className='w-full'>
                 <div className='flex flex-col justify-center items-center mb-4'>
-                    <div className='font-medium'>Total Amount: ₹{result.data.amount/100}</div>
+                    <div className='font-medium'>Total Amount: ₹{result.data.amount}</div>
                 </div>
                 <button id="rzp-button1" className='bg-blue-500 p-3 text-white w-full' onClick={displayRazorpay}>Pay Now</button>
             </div>
