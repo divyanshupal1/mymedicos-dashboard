@@ -11,7 +11,7 @@ function Page({params}) {
 
     React.useEffect(() => {
         const loadDets = async ()=>{
-            const result = await axios.get(process.env.BASE_URL+"/api/ecom/checkout/orderDetails/"+params.orderID);
+            const result = await axios.get(`${process.env.BASE_URL}/api/ecom/checkout/orderDetails/${params.orderID}`);
             setResult(result);
         }
         loadDets();
