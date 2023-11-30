@@ -4,8 +4,11 @@ import { NextResponse } from "next/server"
 import { Timestamp } from "firebase/firestore";
 
 export async function GET(req) {
+    const searchParams = req.nextUrl.searchParams
+    const query1 = searchParams
+    var speciality = query1.get('q')
     var  data = []
-    const q = query(collection(db, "PGupload", "Weekley", "Quiz"));
+    const q = query(collection(db, "PGupload", "Weekley", "Quiz"),where('speciality','==',speciality));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {        
         data.push(doc.data())          

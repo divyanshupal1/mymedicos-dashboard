@@ -27,7 +27,6 @@ export default function Updates({params}) {
         setLoading(false)
       }
     catch(e){
-        console.log(e)
        toast({
          variant: "destructive",
          title: "Error Loading Publications",

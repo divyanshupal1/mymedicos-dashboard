@@ -24,8 +24,7 @@ export async function POST(request){
         if(!user){
             return NextResponse.json({success:false}, {status: 200})
         }
-        console.log("user exists");
-        console.log("user: ", user)
+
         
         //check if password is correct
         const validPassword = password === user.password?true:false;

@@ -4,20 +4,36 @@ import React, { useEffect } from "react"
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import { getData } from "@/lib/docFunctions"
 import SliderGroup from "./SliderGroup"
+import { db,storage } from "@/lib/firebase"
+import { collection, addDoc,getDoc,doc  } from "firebase/firestore"; 
+import Link from "next/link"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function Home() {
+  const {toast} = useToast()
 
  const [loading, setLoading] = React.useState(true)
  const [docs,setDocs]=React.useState([])
 
- async function LoadPublications(){
-   const temp = await getData("SlideShow")
-   console.log(temp)
-   setDocs(temp)
-   setLoading(false)
- }
+ async function LoadSubjects(){
+  try{
+    const docRef = doc(db, "Categories", "s7hdqLUEkfyVJJ6cfbeW");
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data()
+    const temp = Object.keys(data)
+    setDocs(temp)
+    setLoading(false)
+  }
+  catch(e){
+    toast({
+      variant: "destructive",
+      title: "Error Loading Subjects",
+    })
+  }
+}
+
   useEffect(() => {
-    LoadPublications();
+    LoadSubjects();
   },[]);
 
   if(docs.length===0) return <></>
@@ -31,7 +47,10 @@ export default function Home() {
               <AiOutlineLoading3Quarters className="animate-spin text-4xl text-slate-300"/>
             </div> 
             :
-            <SliderGroup docs={docs} reload={LoadPublications}/>
+            // <SliderGroup docs={docs} reload={LoadSubjects}/>
+            <div className="w-full h-full flex gap-3 p-3">
+             {docs.map((state,index)=><Link href={'/dashboard/slideshow/'+state} key={index}><div className="p-3 bg-secondary rounded-lg">{state}</div></Link>)}
+            </div>
           }
       </div>
 

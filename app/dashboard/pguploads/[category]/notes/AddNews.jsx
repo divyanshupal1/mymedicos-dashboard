@@ -21,7 +21,7 @@ import { db,storage } from "@/lib/firebase"
 import { collection, addDoc } from "firebase/firestore"; 
 import { v4 } from "uuid"
   
-export function AddNews({reload}) {  
+export function AddNews({reload,speciality}) {  
     const {toast} = useToast();
     
     const [thumbnail, setThumbnail] = useState(null);
@@ -66,7 +66,6 @@ export function AddNews({reload}) {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setThumbnailSubmitStatus(1);
             setThumbnailUrl(downloadURL);
-            console.log(downloadURL);
           });
         }
       );
@@ -79,6 +78,7 @@ export function AddNews({reload}) {
           Description: description,
           file: thumbnailUrl,
           Time: new Date().toISOString(),
+          speciality: speciality,
         });
         toast({
           title: "Notes Added",

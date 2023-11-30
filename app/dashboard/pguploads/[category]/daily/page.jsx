@@ -3,8 +3,7 @@ import React from 'react'
 import { AddDailyQuiz } from '@/components/system/quiz/addDailyQuiz'
 
 
-function Page() {
-  
+function Page({params}) {
   async function loadQuiz(){
     var data=[];
     const q = query(collection(db, "PGupload", "Daily", "Quiz"));
@@ -16,7 +15,7 @@ function Page() {
   }
 
   return (
-    <div className='w-full flex justify-end p-3'><AddDailyQuiz/></div>
+    <div className='w-full flex justify-end p-3'><AddDailyQuiz speciality={params.category}/></div>
   )
 }
 

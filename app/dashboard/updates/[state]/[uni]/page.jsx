@@ -25,14 +25,11 @@ export default function Updates({params}) {
         const querySnapshot = await getDocs(collection(db, "Updates",state,uni));
         querySnapshot.forEach((doc) => {
              temp = [...temp,[doc.id,doc.data()]]
-        //   setDocs(doc.data().data)
-            // console.log(doc.data())
         });    
         setDocs(temp)    
         setLoading(false)
       }
     catch(e){
-        console.log(e)
        toast({
          variant: "destructive",
          title: "Error Loading Publications",

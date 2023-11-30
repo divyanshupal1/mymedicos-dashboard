@@ -72,7 +72,7 @@ export function AddUpdates({reload,state,uni}) {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setThumbnailSubmitStatus(1);
             setThumbnailUrl(downloadURL);
-            console.log(downloadURL);
+  
           });
         }
       );

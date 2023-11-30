@@ -17,8 +17,9 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from '@/lib/firebase';
 import { useToast } from '@/components/ui/use-toast'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
+import { v4 } from "uuid"
 
-export function AddDailyQuiz(){
+export function AddDailyQuiz({speciality}){
   const {toast} = useToast();
   const [question, setQuestion] = React.useState('')
   const [optionA, setOptionA] = React.useState('')
@@ -47,7 +48,7 @@ export function AddDailyQuiz(){
       return;
     }
     setSubmit(true);
-    await setDoc(doc(db, "PGupload", "Daily", "Quiz",date), {
+    await setDoc(doc(db, "PGupload", "Daily", "Quiz",v4()), {
       Question: question,
       A: optionA,
       B: optionB,
@@ -55,6 +56,7 @@ export function AddDailyQuiz(){
       D: optionD,
       Correct: answer,
       Date: date,
+      speciality: speciality
     }).then(()=>{
       setSubmit(false);
       toast({

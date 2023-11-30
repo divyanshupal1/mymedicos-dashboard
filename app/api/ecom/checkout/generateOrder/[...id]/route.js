@@ -37,7 +37,6 @@ export async function GET(req,{params}) {
         const item = docSnap.data()
         price += item.Price;
         items.push(item)        
-        console.log(price,items);
         return calcPrice(index+1,price,items);
     }
 
@@ -65,11 +64,11 @@ export async function GET(req,{params}) {
         cart: []
     });
 
-    // console.log("hello");
+
     return new Response(JSON.stringify({status:"success",order_id:order.id}));
     }
     catch(e){
-        console.log(e);
+    
         return new Response(JSON.stringify({status:"error",message:"some error occured"}));
     }
 }

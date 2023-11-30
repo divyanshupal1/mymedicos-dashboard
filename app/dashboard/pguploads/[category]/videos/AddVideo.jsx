@@ -21,7 +21,7 @@ import { db,storage } from "@/lib/firebase"
 import { collection, addDoc } from "firebase/firestore"; 
 import { v4 } from "uuid"
   
-export function AddVideo({reload}) {  
+export function AddVideo({reload,speciality}) {  
     const {toast} = useToast();
     
     const [thumbnail, setThumbnail] = useState(null);
@@ -66,7 +66,7 @@ export function AddVideo({reload}) {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setThumbnailSubmitStatus(1);
             setThumbnailUrl(downloadURL);
-            console.log(downloadURL);
+
           });
         }
       );
@@ -79,6 +79,7 @@ export function AddVideo({reload}) {
           URL: description,
           Thumbnail: thumbnailUrl,
           Time: new Date().toISOString(),
+          speciality: speciality,
         });
         toast({
           title: "Video Added",

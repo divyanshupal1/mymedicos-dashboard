@@ -72,7 +72,6 @@ export function AddNews({reload}) {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setThumbnailSubmitStatus(1);
             setThumbnailUrl(downloadURL);
-            console.log(downloadURL);
           });
         }
       );

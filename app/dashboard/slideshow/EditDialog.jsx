@@ -17,6 +17,15 @@ import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import { insertData, updateData} from '@/lib/docFunctions'
 import { v4 } from 'uuid'
 import { MdEdit,MdAdd } from "react-icons/md"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { db,storage } from "@/lib/firebase"
+import { collection, addDoc,getDoc,doc  } from "firebase/firestore"; 
 
 export function EditDialog({reload,data}){
     const {toast} = useToast();
@@ -26,6 +35,9 @@ export function EditDialog({reload,data}){
     const [fileUrl,setFileUrl] = useState("");
     const [file,setFile] = useState(null);
     const [fileProgress,setFileProgress] = useState(1);
+    const [type,setType] = useState("pdf");
+    const [speciality,setSpeciality] = useState("Neurology");
+    const [subjects,setSubjects] = useState([]);
 
     async function uploadThumbnail(e){
       setFileProgress(0);
@@ -53,21 +65,57 @@ export function EditDialog({reload,data}){
     function callback(){
         setPublishStatus(0);
         toast({
-            title: "Updated Banner !",
+            title: "Updated Slideshow !",
         })
         reload();
     }
     async function Publish(){
       setPublishStatus(1);
-      await insertData("SlideShow",{title:title,images:newData,file:fileUrl},callback)
+      try{
+        const docRef = await addDoc(collection(db, "SlideShow","Speciality",speciality), {
+          title:title,
+          images:newData,
+          file:fileUrl,
+          type:type,
+        });
+        toast({
+          title: "Update Added!",
+        })
+        callback();
+        setPublishStatus(0);
+        reload();
+        reset();        
+      }
+      catch(e){
+        setPublishStatus(0);
+        toast({
+          variant: "destructive",
+          title: "Some Error Occured",
+        })
+      }
     }
     const addImage = ()=>{
         setNewData([...newData,{id:"",url:""}])
     }
     function reset(){
         setNewData([{id:"",url:""}]);
+        LoadSubjects()
     }
-
+    async function LoadSubjects(){
+      try{
+        const docRef = doc(db, "Categories", "s7hdqLUEkfyVJJ6cfbeW");
+        const docSnap = await getDoc(docRef);
+        const data = docSnap.data()
+        const temp = Object.keys(data)
+        setSubjects(temp)
+      }
+      catch(e){
+        toast({
+          variant: "destructive",
+          title: "Error Loading Subjects",
+        })
+      }
+    }
 
 
     return (
@@ -82,28 +130,53 @@ export function EditDialog({reload,data}){
             </DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4 overflow-x-scroll scrollbar-custom ">
-            <div className="flex flex-col space-y-2 mt-auto p-2">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" placeholder="Title of slideshow" value={title}
-              className={`${title.length > 1 ? "" : "outline outline-red-600"}`}
-              onChange={(e)=>setTitle(e.target.value)} 
-              />
+            <div className="w-full flex justify-between gap-x-4">
+              <div className="flex flex-col space-y-2 w-1/2 p-1">
+                <Label htmlFor="title">Title</Label>
+                <Input id="title" placeholder="Title of slideshow" value={title}
+                className={`${title.length > 1 ? "" : "outline outline-red-600"}`}
+                onChange={(e)=>setTitle(e.target.value)} 
+                />
+              </div>
+              <div className="flex flex-col space-y-2 w-1/2 p-1">
+                <Label htmlFor="title">Speciality</Label>
+                <Select onValueChange={(value)=>setSpeciality(value)} defaultValue="Any">
+                  <SelectTrigger id="framework">
+                    <SelectValue placeholder="Select" value={speciality}  />
+                  </SelectTrigger>
+                  <SelectContent position="popper" >
+                    <SelectItem value="Any">Any</SelectItem>
+                    {
+                      subjects.map((item)=>{
+                        return <SelectItem key={item} value={item}>{item}</SelectItem>
+                      })
+                    }
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="flex flex-col space-y-1.5 relative p-2">
-            <Label htmlFor="price">Select PPT File</Label>
-            <Input id="file"
-              type="file"
-              placeholder="Select PPT File"
-              className={`${fileUrl ? "" : "outline outline-red-600"}`}
-              onChange={(e)=>{
-              uploadThumbnail(e);
-              }}
-            />
-            <div className="scale-125 absolute right-5 bottom-3  p-1 rounded bg-white dark:bg-slate-950">
-                {fileProgress == 100 && file && <IoCloudDone className="text-green-600 font-bold "/>}
-                {fileProgress == 0 && file && <AiOutlineLoading3Quarters className="text-green-600 font-bold animate-spin"/>}
+            <div className="w-full flex justify-between gap-x-4">
+              <div className="flex flex-col space-y-1.5 relative p-2 w-full">
+                <Label htmlFor="price">Select File</Label>
+                <Input id="file"
+                  type="file"
+                  placeholder="Select PPT File"
+                  className={`${fileUrl ? "" : "outline outline-red-600"}`}
+                  onChange={(e)=>{
+                  uploadThumbnail(e);
+                  }}
+                />
+                <div className="scale-125 absolute right-5 bottom-3  p-1 rounded bg-white dark:bg-slate-950">
+                    {fileProgress == 100 && file && <IoCloudDone className="text-green-600 font-bold "/>}
+                    {fileProgress == 0 && file && <AiOutlineLoading3Quarters className="text-green-600 font-bold animate-spin"/>}
+                </div>
+              </div>
+              <div className="flex flex-col space-y-2 p-2 w-2/5">
+                <Label htmlFor="price">Type</Label>
+                <ToggleGroupDemo setVal={setType} val={type}/>
+              </div>
             </div>
-        </div>
+            
           <form className='h-full'>
             <div className="flex w-full items-top grow gap-5 h-full">
                 {newData.map((image,index)=><ImageComp key={index} index={index} doc={image} fulldoc={newData} setDoc={setNewData}/>)}                        
@@ -122,7 +195,6 @@ export function EditDialog({reload,data}){
     )
 }
 
-import { storage } from "@/lib/firebase"
 import { ref,uploadBytesResumable,getDownloadURL } from "firebase/storage"
 
 function ImageComp({doc,index,fulldoc,setDoc}){
@@ -188,4 +260,22 @@ function ImageComp({doc,index,fulldoc,setDoc}){
 
       </div>
     )
+}
+
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from "@/components/ui/toggle-group"
+
+export function ToggleGroupDemo({setVal,val}) {
+  return (
+    <ToggleGroup type="single" value={val} defaultValue="Book" className="w-full justify-between" onValueChange={(val)=>setVal(val)}>
+      <ToggleGroupItem value="PPT" aria-label="Toggle bold" className="w-1/2">
+        <p>PPT</p>
+      </ToggleGroupItem>
+      <ToggleGroupItem value="PDF" aria-label="Toggle italic" className="w-1/2" >
+        <p>PDF</p>
+      </ToggleGroupItem>
+    </ToggleGroup>
+  )
 }

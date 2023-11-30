@@ -21,7 +21,7 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { DatePickerWithRange } from "./datePicker"
 import { v4 } from "uuid"
 
-export function TimelyQuiz(){
+export function TimelyQuiz({speciality}){
   const {toast} = useToast();
   const [quizTitle, setQuizTitle] = React.useState('');
   const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...'}]);
@@ -80,7 +80,8 @@ export function TimelyQuiz(){
       title: quizTitle,
       Data:data,
       from: date.from,
-      to: date.to
+      to: date.to,
+      speciality: speciality,
     }).then(()=>{
       setSubmit(false);
       toast({

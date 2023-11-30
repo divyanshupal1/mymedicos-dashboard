@@ -9,7 +9,7 @@ import { toast } from "@/components/ui/use-toast"
 import { CardGroup} from "./NewsSection"
 import { AddNews } from "./AddNews"
 
-export default function Home() {
+export default function Home({params}) {
 
  const [loading, setLoading] = React.useState(true)
  const [docs,setDocs]=React.useState([])
@@ -40,7 +40,7 @@ export default function Home() {
     <>
     <div className="w-full h-ful flex flex-col  overflow-scroll overflow-x-hidden">
       <div className="header w-full p-3 flex justify-end">
-        <AddNews reload={LoadNews}/>
+        <AddNews reload={LoadNews} speciality={params.category}/>
       </div>
       <div className="view w-full flex items-center justify-center">
           {loading ?
