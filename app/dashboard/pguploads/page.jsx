@@ -39,15 +39,15 @@ export default function Home() {
   return (
     <>
     <div className="w-full h-ful flex flex-col  overflow-scroll overflow-x-hidden">
-      <div className="view w-full flex items-center justify-center h-full">
+      <div className="view w-full flex  justify-center h-full">
           {loading ?
             <div className="">
               <AiOutlineLoading3Quarters className="animate-spin text-4xl text-slate-300"/>
             </div> 
             :
             // <SliderGroup docs={docs} reload={LoadSubjects}/>
-            <div className="w-full h-full flex gap-3 p-3">
-             {docs.map((state,index)=><Link href={'/dashboard/pguploads/'+state} key={index}><div className="p-3 bg-secondary rounded-lg">{state}</div></Link>)}
+            <div className="w-full gap-3 flex flex-col flex-wrap p-3 ">
+             {docs.map((state,index)=><Link href={'/dashboard/pguploads/'+state} key={index} ><div className="p-3 bg-secondary hover:bg-primary hover:text-white rounded-lg m-0">{state}</div></Link>)}
             </div>
           }
       </div>

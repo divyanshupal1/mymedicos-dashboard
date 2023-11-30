@@ -7,10 +7,10 @@ import { doc, updateDoc,arrayUnion, arrayRemove,getDoc  } from "firebase/firesto
 
 export async function POST(req,{params}){
     const {id} = params
-    const body = await req.json()
+
     const docRef = doc(db, "users", id[0]);
 
-    if(body.action === "get"){
+    if(id[1] === "get"){
         try{
             const docSnap = await getDoc(docRef);
             const data = docSnap.data()
@@ -20,10 +20,10 @@ export async function POST(req,{params}){
             return NextResponse.json({status:"failed",message:"some error occured"}, {status: 200})
         }
     }
-    if(body.action === "add"){
+    if(id[1] === "add"){
         try{
             await updateDoc(docRef, {
-                cart: arrayUnion(body.item)
+                cart: arrayUnion(id[2])
             });
             return NextResponse.json({status:"success",message:"item added to cart"}, {status: 200})
         }
@@ -31,10 +31,10 @@ export async function POST(req,{params}){
             return NextResponse.json({status:"failed",message:"some error occured"}, {status: 200})
         }
     }
-    if(body.action === "remove"){
+    if(id[1] === "remove"){
         try{
             await updateDoc(docRef, {
-                cart: arrayRemove(body.item)
+                cart: arrayRemove(id[2])
             });
             return NextResponse.json({status:"success",message:"item removed from cart"}, {status: 200})
         }

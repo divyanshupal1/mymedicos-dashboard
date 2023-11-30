@@ -1,6 +1,5 @@
 import Razorpay from "razorpay";
-import { db } from '@/lib/firebase';
-import { doc, setDoc,getDoc,updateDoc  } from "firebase/firestore";
+import admin from "@/lib/firebase-admin";
 
 
 
@@ -19,9 +18,10 @@ export async function GET(req,{params}) {
 
   try{
     const {id} = params
-    const docRef = doc(db, "users", id[0]);
-    const docSnap = await getDoc(docRef)
-    const user = docSnap.data()
+    const db = admin.firestore();
+    const docSnap = await db.collection('users').where('UID','==',id[0]).get();
+    const user = docSnap.docs[0].data();
+    const docid = docSnap.docs[0].id;
     const cart = user.cart;
     if(cart.length === 0){
         return new Response(JSON.stringify({status:"error",message:"cart is empty"}));
@@ -32,9 +32,8 @@ export async function GET(req,{params}) {
             return [price,items];
         }
         const itemID = cart[index];
-        const docRef = doc(db, "Publications", itemID);
-        const docSnap = await getDoc(docRef)
-        const item = docSnap.data()
+        const itemSnap =await db.collection('Publications').doc(itemID).get();
+        const item = itemSnap.data()
         price += item.Price;
         items.push(item)        
         return calcPrice(index+1,price,items);
@@ -47,10 +46,10 @@ export async function GET(req,{params}) {
         currency: "INR",
     };
     const order = await instance.orders.create(options)
-    await setDoc(doc(db, "Orders", order.id), {
+    await db.collection('Orders').doc(order.id).set({
         order_id: order.id,
         items: cart,
-        user: id[0],
+        user: user.UID,
         status: "pending",
         amount: price,
         currency: "INR",
@@ -59,16 +58,14 @@ export async function GET(req,{params}) {
         created_at: new Date(),
         updated_at: new Date(),
     });
-
-    await updateDoc(docRef, {
+    await db.collection('users').doc(docid).update({
         cart: []
-    });
-
+    })
 
     return new Response(JSON.stringify({status:"success",order_id:order.id}));
     }
     catch(e){
-    
+        console.log(e);
         return new Response(JSON.stringify({status:"error",message:"some error occured"}));
     }
 }

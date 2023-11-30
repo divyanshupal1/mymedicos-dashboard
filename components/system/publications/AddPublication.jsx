@@ -9,6 +9,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
+  SelectLabel,
 } from "@/components/ui/select"
 import {
   Dialog,
@@ -208,13 +210,16 @@ export function AddPublication({reload}) {
                   <SelectTrigger id="framework">
                     <SelectValue placeholder="Select" value={subject}  />
                   </SelectTrigger>
-                  <SelectContent position="popper" >
+                  <SelectContent >
+                    <SelectGroup>
+                    <SelectLabel>Select Speciality</SelectLabel>
                     <SelectItem value="Any">Any</SelectItem>
                     {
                       subjects.map((item)=>{
                         return <SelectItem key={item} value={item}>{item}</SelectItem>
                       })
                     }
+                    </SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
@@ -224,7 +229,7 @@ export function AddPublication({reload}) {
                   <SelectTrigger id="framework">
                     <SelectValue placeholder="Select" value={category}  />
                   </SelectTrigger>
-                  <SelectContent position="popper" >
+                  <SelectContent position="absolute" >
                     <SelectItem value="ALL">All</SelectItem>
                     <SelectItem value="FREE">Free</SelectItem>
                     <SelectItem value="PAID">Paid</SelectItem>

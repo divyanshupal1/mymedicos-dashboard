@@ -1,4 +1,5 @@
 import admin from "@/lib/firebase-admin";
+import { urlMerger } from "@/lib/utils";
 import { NextResponse } from "next/server"
 
 export const dynamic = 'force-dynamic'
@@ -6,9 +7,9 @@ export const dynamic = 'force-dynamic'
 export async function GET(req,{params}) {
     var type = params.type;
     var data = undefined;
-
+    var speciality = urlMerger(params.type[0])
     if(type.length == 1){
-        await admin.firestore().collection("Publications").where('Subject','==',type[0]).get()
+        await admin.firestore().collection("Publications").where('Subject','==',speciality).get()
         .then((querySnapshot) => {
             data = [];
             querySnapshot.forEach((doc) => {
@@ -19,7 +20,7 @@ export async function GET(req,{params}) {
         })  
     }
     else{
-        await admin.firestore().collection("Publications").where('Subject','==',type[0]).where('Category','==',type[1]).get()
+        await admin.firestore().collection("Publications").where('Subject','==',speciality).where('Category','==',type[1]).get()
         .then((querySnapshot) => {
             data = [];
             querySnapshot.forEach((doc) => {

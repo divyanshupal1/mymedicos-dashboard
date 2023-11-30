@@ -1,7 +1,10 @@
 import { db} from "@/lib/firebase"
-import { doc,getDoc,getDocs,collection} from "firebase/firestore"; 
+import { urlMerger } from "@/lib/utils";
+import {getDocs,collection} from "firebase/firestore"; 
 export const dynamic = 'force-dynamic'
-export async function GET(Request){   
+export async function GET(Request,{params}){   
+        var speciality = params.speciality
+        speciality = urlMerger(speciality)
         var temp = []
         const querySnapshot = await getDocs(collection(db, "SlideShow"));
         querySnapshot.forEach((doc) => {

@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import { AddDailyQuiz } from '@/components/system/quiz/addDailyQuiz'
+import { urlMerger } from '@/lib/utils';
 
 
 function Page({params}) {
@@ -15,7 +16,7 @@ function Page({params}) {
   }
 
   return (
-    <div className='w-full flex justify-end p-3'><AddDailyQuiz speciality={params.category}/></div>
+    <div className='w-full flex justify-end p-3'><AddDailyQuiz speciality={urlMerger(params.category)}/></div>
   )
 }
 

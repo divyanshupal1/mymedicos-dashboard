@@ -2,11 +2,13 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from '@/lib/firebase';
 import { NextResponse } from "next/server"
 import { Timestamp } from "firebase/firestore";
+import { urlMerger } from "@/lib/utils";
 
 export async function GET(req) {
     const searchParams = req.nextUrl.searchParams
     const query1 = searchParams
     var speciality = query1.get('q')
+    speciality = urlMerger(speciality)
     var  data = []
     var time_stamp = Timestamp.fromDate(new Date());  
     const q = query(collection(db, "PGupload", "Weekley", "Quiz"), where("to", ">=", time_stamp),where('speciality','==',speciality));
