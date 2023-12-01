@@ -15,6 +15,11 @@ export default function Home() {
         });
         setData(temp);
     }
+
+    useEffect(() => {
+        request()
+    }, [
+    ])
     // const requests = db.collection('Medical Council Number Request').get()
     return <McnDisplay data={data} reload={request}/>
 }

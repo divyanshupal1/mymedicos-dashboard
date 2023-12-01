@@ -53,8 +53,8 @@ export function McnDisplay({ data ,reload}) {
                     title: "MCN Verified",
                     message: "MCN Verified Successfully",          
                 })
-                reload();
             });
+            reload();
         }
         catch(e){
             toast({
@@ -77,12 +77,9 @@ export function McnDisplay({ data ,reload}) {
                         title: "MCN Rejected",
                         message: "MCN Rejected Successfully",          
                     })
-                    reload();
                 });
             });
-       
-            
-            
+            reload();            
         }
         catch(e){
             toast({
