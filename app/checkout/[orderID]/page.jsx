@@ -11,7 +11,7 @@ function Page({params}) {
 
     React.useEffect(() => {
         const loadDets = async ()=>{
-            var reqi = `https://mymedicos-dashboard.vercel.app/api/ecom/checkout/orderDetails/${params.orderID}`  
+            var reqi = `http://localhost:3000/api/ecom/checkout/orderDetails/${params.orderID}`  
             const result = await axios.get(reqi);
             setResult(result);
         }
@@ -92,7 +92,7 @@ function Page({params}) {
                     <div className='flex gap-x-6 justify-start items-center rounded-md border p-3 bg-slate-300'>
                         <Avatar>
                             {/* <AvatarImage src="https://github.com/shadcn.pnsg" /> */}
-                            <AvatarFallback>{result.data.user.Name.split(" ")[0][0]}{result.data.user.Name.split(" ")[1][0]}</AvatarFallback>
+                            <AvatarFallback>{result.data.user.Name}</AvatarFallback>
                         </Avatar>
                         <div>
                             <div className='font-medium'>{result.data.user.Name}</div>
