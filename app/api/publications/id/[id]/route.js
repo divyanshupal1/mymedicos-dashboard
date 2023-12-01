@@ -6,5 +6,5 @@ export async function GET(req,{params}) {
     const docRef = await db.collection("Publications").doc(id).get();
     const data = docRef.data();
     data.URL = "";
-    return new Response(JSON.stringify({"status":"success","data":data}))
+    return new Response(JSON.stringify({"status":"success","id":docRef.id,"data":data}))
 }
