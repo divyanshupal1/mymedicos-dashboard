@@ -14,7 +14,7 @@ function Titlebar() {
   title = title.charAt(0).toUpperCase() + title.slice(1)
   return (
     <>
-     {title}
+     {title=='Mcn'?'MCN Requests':title}
     </>
   )
 }

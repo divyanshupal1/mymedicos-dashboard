@@ -6,6 +6,7 @@ export default function Navigation({active,href,children}){
     let path = usePathname()
     return (
         <>
+            <Navtab href='/dashboard/mcn' active={path.split('/')[2] === 'mcn'?true:false} >MCN Requests</Navtab>
             <Navtab href='/dashboard/publications' active={path.split('/')[2] === 'publications'?true:false} >Publications</Navtab>
             <Navtab href='/dashboard/news' active={path.split('/')[2] === 'news'?true:false} >News</Navtab>
             <Navtab href='/dashboard/uguploads' active={path.split('/')[2] === 'uguploads'?true:false} >UG Uploads</Navtab>

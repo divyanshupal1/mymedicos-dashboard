@@ -6,12 +6,13 @@ import { useToast } from '@/components/ui/use-toast';
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import Link from "next/link";
 import SliderGroup from "../SliderGroup"
+import { urlMerger } from '@/lib/utils';
 
 function Page({params}) {
  const {toast} = useToast();
 
  var speciality = params.speciality;
-    
+speciality = urlMerger(speciality);
  const [loading, setLoading] = React.useState(true)
  const [docs,setDocs]=React.useState([])
 
@@ -45,7 +46,7 @@ function Page({params}) {
             </div> 
             :
             
-            <SliderGroup docs={docs} reload={LoadUpdates}/>
+            <SliderGroup docs={docs} speciality={speciality} reload={LoadUpdates}/>
           }
       </div>
 

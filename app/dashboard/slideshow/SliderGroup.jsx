@@ -1,10 +1,10 @@
 import React from 'react'
 import {EditDialog} from './EditDialog'
 
-function SliderGroup({reload,docs}) {
+function SliderGroup({reload,docs,speciality}) {
   return (
     <div className='w-full h-full '>
-        <div className='w-full flex justify-end p-3'><EditDialog reload={reload}/></div>
+        <div className='w-full flex justify-end p-3'><EditDialog reload={reload} speciality={speciality}/></div>
         <div className='w-full h-full p-6 gap-y-6 flex flex-col'>
             {docs.map((slider,index)=><SliderCard key={index} slider={slider} reload={reload}/>)}
         </div>

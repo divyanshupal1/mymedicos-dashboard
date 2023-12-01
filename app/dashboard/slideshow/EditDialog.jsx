@@ -26,8 +26,10 @@ import {
 } from "@/components/ui/select"
 import { db,storage } from "@/lib/firebase"
 import { collection, addDoc,getDoc,doc  } from "firebase/firestore"; 
+import { urlMerger } from "@/lib/utils"
 
-export function EditDialog({reload,data}){
+export function EditDialog({reload,speciality}){
+    speciality =urlMerger(speciality);
     const {toast} = useToast();
     const [newData,setNewData] = useState([{id:"",url:""}]);
     const [publishStatus,setPublishStatus] = useState(0);
@@ -36,8 +38,7 @@ export function EditDialog({reload,data}){
     const [file,setFile] = useState(null);
     const [fileProgress,setFileProgress] = useState(1);
     const [type,setType] = useState("pdf");
-    const [speciality,setSpeciality] = useState("Neurology");
-    const [subjects,setSubjects] = useState([]);
+
 
     async function uploadThumbnail(e){
       setFileProgress(0);
@@ -99,24 +100,7 @@ export function EditDialog({reload,data}){
     }
     function reset(){
         setNewData([{id:"",url:""}]);
-        LoadSubjects()
     }
-    async function LoadSubjects(){
-      try{
-        const docRef = doc(db, "Categories", "s7hdqLUEkfyVJJ6cfbeW");
-        const docSnap = await getDoc(docRef);
-        const data = docSnap.data()
-        const temp = Object.keys(data)
-        setSubjects(temp)
-      }
-      catch(e){
-        toast({
-          variant: "destructive",
-          title: "Error Loading Subjects",
-        })
-      }
-    }
-
 
     return (
         <Dialog onOpenChange={reset}>
@@ -131,28 +115,12 @@ export function EditDialog({reload,data}){
           </DialogHeader>
           <div className="grid gap-4 py-4 overflow-x-scroll scrollbar-custom ">
             <div className="w-full flex justify-between gap-x-4">
-              <div className="flex flex-col space-y-2 w-1/2 p-1">
+              <div className="flex flex-col space-y-2 w-full p-1">
                 <Label htmlFor="title">Title</Label>
                 <Input id="title" placeholder="Title of slideshow" value={title}
                 className={`${title.length > 1 ? "" : "outline outline-red-600"}`}
                 onChange={(e)=>setTitle(e.target.value)} 
                 />
-              </div>
-              <div className="flex flex-col space-y-2 w-1/2 p-1">
-                <Label htmlFor="title">Speciality</Label>
-                <Select onValueChange={(value)=>setSpeciality(value)} defaultValue="Any">
-                  <SelectTrigger id="framework">
-                    <SelectValue placeholder="Select" value={speciality}  />
-                  </SelectTrigger>
-                  <SelectContent position="popper" >
-                    <SelectItem value="Any">Any</SelectItem>
-                    {
-                      subjects.map((item)=>{
-                        return <SelectItem key={item} value={item}>{item}</SelectItem>
-                      })
-                    }
-                  </SelectContent>
-                </Select>
               </div>
             </div>
             <div className="w-full flex justify-between gap-x-4">
