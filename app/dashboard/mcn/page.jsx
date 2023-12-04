@@ -7,6 +7,7 @@ import { McnDisplay } from "./mcnDisplay"
 
 export default function Home() {
     const [data, setData] = useState([])
+    
     async function request(){
         const docSnap = await getDocs(collection(db, "Medical Council Number Request"));
         var temp = [];
@@ -18,8 +19,7 @@ export default function Home() {
 
     useEffect(() => {
         request()
-    }, [
-    ])
+    },[])
     // const requests = db.collection('Medical Council Number Request').get()
     return <McnDisplay data={data} reload={request}/>
 }

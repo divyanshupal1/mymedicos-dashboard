@@ -13,10 +13,25 @@ export async function POST(req,{params}){
     if(id[1] === "get"){
         try{
             const docSnap = await getDoc(docRef);
-            const data = docSnap.data()
-            return NextResponse.json({status:"success",cart:data.cart}, {status: 200})
+            const data = docSnap.data().cart
+            var products = []
+
+            function loadProduct(){
+                return new Promise((resolve,reject)=>{
+                    data.forEach(async(element) => {
+                        const productDoc = doc(db,"Publications",element);
+                        const productSnap = await getDoc(productDoc);
+                        products.push({id:productSnap.id,...productSnap.data(),URL:""})
+                        resolve()
+                    });
+                })
+            }
+            await loadProduct()
+
+            return NextResponse.json({status:"success",cart:products}, {status: 200})
         }
         catch(e){
+            console.log(e)
             return NextResponse.json({status:"failed",message:"some error occured"}, {status: 200})
         }
     }
