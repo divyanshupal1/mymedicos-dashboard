@@ -12,7 +12,6 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { Button } from '@/components/ui/button'
-import { de } from 'date-fns/locale'
 import { useToast } from '@/components/ui/use-toast'
 import {useRouter} from 'next/navigation'
   
@@ -23,8 +22,8 @@ export function McnDisplay({ data ,reload}) {
     const router = useRouter()
 
     useEffect(() => {
+        var data1=[]
         data.forEach(async (item, index) => {
-            var data1=[]
             var q = query(collection(db,'users'),where('Phone Number','==',item[1]['User']))
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
@@ -36,9 +35,9 @@ export function McnDisplay({ data ,reload}) {
                 temp.user_doc = doc.id;
                 temp.docid = item[0];
                 data1.push(temp);  
-            });
-            setNewData(data1);
+            });           
         })
+        setNewData(data1);
     }, [data])
 
     async function verify(docid, user_doc,index) {

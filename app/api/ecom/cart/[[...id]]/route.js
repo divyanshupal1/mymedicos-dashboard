@@ -1,34 +1,39 @@
 import { NextResponse } from "next/server";
 import { db } from '@/lib/firebase';
 import { doc, updateDoc,arrayUnion, arrayRemove,getDoc  } from "firebase/firestore";
+import admin from "@/lib/firebase-admin";
 
 
 
-
-export async function POST(req,{params}){
+export async function POST(req,{params},res){
     const {id} = params
+    const firestore = admin.firestore();
 
     const docRef = doc(db, "users", id[0]);
 
     if(id[1] === "get"){
         try{
-            const docSnap = await getDoc(docRef);
-            const data = docSnap.data().cart
-            var products = []
-
-            function loadProduct(){
-                return new Promise((resolve,reject)=>{
-                    data.forEach(async(element) => {
-                        const productDoc = doc(db,"Publications",element);
-                        const productSnap = await getDoc(productDoc);
-                        products.push({id:productSnap.id,...productSnap.data(),URL:""})
-                        resolve()
-                    });
-                })
-            }
-            await loadProduct()
-
-            return NextResponse.json({status:"success",cart:products}, {status: 200})
+            const user = await firestore.collection('users').doc(id[0]).get()
+            const cart = user.data().cart;
+            
+            const cartSize = cart.length;
+            
+            return new Promise((resolve) => {
+                var products = []
+                cart.forEach(async(element,index) => {
+                    console.log(element)
+                    var itemDetails = await firestore.collection('Publications').doc(element).get()
+                    const pdata = itemDetails.data()
+                    pdata.URL = ""
+                    pdata.id = itemDetails.id
+                    products.push(pdata)
+                   if(cartSize-1==index) resolve(products)
+                });
+                
+              })
+              .then((products)=>{
+                return new Response(JSON.stringify({status:"success",data:products}))
+              }); 
         }
         catch(e){
             console.log(e)
