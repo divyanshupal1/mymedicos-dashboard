@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { db } from '@/lib/firebase'
 import { collection,getDocs,where,query,updateDoc,deleteDoc,doc } from 'firebase/firestore'
 import {
@@ -13,15 +13,16 @@ import {
   } from "@/components/ui/table"
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
-import {useRouter} from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+
   
 
 export function McnDisplay({ data ,reload}) {
     const {toast} = useToast()
+    const router = useRouter();
     const [newData, setNewData] = useState([])
-    const router = useRouter()
-
-    useEffect(() => {
+    console.log(data)
+    useEffect(()=>{
         var data1=[]
         data.forEach(async (item, index) => {
             var q = query(collection(db,'users'),where('Phone Number','==',item[1]['User']))
@@ -37,8 +38,10 @@ export function McnDisplay({ data ,reload}) {
                 data1.push(temp);  
             });           
         })
-        setNewData(data1);
-    }, [data])
+        setNewData([...data1]);
+        router.refresh
+    },[])
+
 
     async function verify(docid, user_doc,index) {
         try{
@@ -53,7 +56,7 @@ export function McnDisplay({ data ,reload}) {
                     message: "MCN Verified Successfully",          
                 })
             });
-            reload();
+            router.refresh();
         }
         catch(e){
             toast({
@@ -78,7 +81,7 @@ export function McnDisplay({ data ,reload}) {
                     })
                 });
             });
-            reload();            
+            router.refresh();            
         }
         catch(e){
             toast({
@@ -90,7 +93,6 @@ export function McnDisplay({ data ,reload}) {
         
     }
 
-    console.log(newData)
     return (
         <>            
             <div className="flex flex-col w-9/12 mt-9">
