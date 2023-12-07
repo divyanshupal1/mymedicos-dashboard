@@ -19,9 +19,9 @@ export async function GET(req,{params}) {
   try{
     const {id} = params
     const db = admin.firestore();
-    const docSnap = await db.collection('users').where('UID','==',id[0]).get();
-    const user = docSnap.docs[0].data();
-    const docid = docSnap.docs[0].id;
+    const docSnap = await db.collection('users').doc(id[0]).get();
+    const user = docSnap.data();
+    const docid = docSnap.id;
     const cart = user.cart;
     if(cart.length === 0){
         return new Response(JSON.stringify({status:"error",message:"cart is empty"}));
@@ -49,7 +49,7 @@ export async function GET(req,{params}) {
     await db.collection('Orders').doc(order.id).set({
         order_id: order.id,
         items: cart,
-        user: user.UID,
+        user: user.DocID,
         status: "pending",
         amount: price,
         currency: "INR",

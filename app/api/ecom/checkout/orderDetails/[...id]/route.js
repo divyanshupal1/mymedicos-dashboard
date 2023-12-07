@@ -1,5 +1,3 @@
-import { doc, getDoc } from "firebase/firestore"
-import { db } from "@/lib/firebase";
 import admin from "@/lib/firebase-admin";
 
 export async function GET(req,{params}) { 
@@ -8,8 +6,8 @@ export async function GET(req,{params}) {
     const orderId = id[0];
     const docSnap = await db.collection('Orders').doc(orderId).get() ;
     const order = docSnap.data();
-    const userSnap = await db.collection('users').where('UID','==',order.user).get();
-    const user = userSnap.docs[0].data();
+    const userSnap = await db.collection('users').doc(order.user).get();
+    const user = userSnap.data()
     order.user = {
         name: user.Name,
         email: user["Email ID"],

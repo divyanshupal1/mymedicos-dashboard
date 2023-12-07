@@ -48,6 +48,7 @@ export async function POST(req,{params},res){
             return NextResponse.json({status:"success",message:"item added to cart"}, {status: 200})
         }
         catch(e){
+            console.log(e)
             return NextResponse.json({status:"failed",message:"some error occured"}, {status: 200})
         }
     }
