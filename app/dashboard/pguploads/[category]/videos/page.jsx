@@ -8,6 +8,7 @@ import { collection,getDocs} from "firebase/firestore";
 import { toast } from "@/components/ui/use-toast"
 import { CardGroup} from "./VideoSection"
 import { AddVideo } from "./AddVideo"
+import { urlMerger } from "@/lib/utils";
 
 export default function Home({params}) {
 
@@ -19,7 +20,10 @@ export default function Home({params}) {
      const querySnapshot = await getDocs(collection(db, "PGupload","Videos","Video"));
      var temp = []
      querySnapshot.forEach((doc) => {
-       temp = [...temp,[doc.id,doc.data()]];
+      if(doc.data()?.speciality==urlMerger(params.category)){
+        temp = [...temp,[doc.id,doc.data()]];
+      }
+      //  temp = [...temp,[doc.id,doc.data()]];
      });
      setDocs(temp)
      setLoading(false)
