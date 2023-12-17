@@ -17,7 +17,7 @@ export default function Home() {
 
  async function LoadSubjects(){
   try{
-    const docRef = doc(db, "Categories", "s7hdqLUEkfyVJJ6cfbeW");
+    const docRef = doc(db, "Categories", "39liVyLEjII6dtzolxSZ");
     const docSnap = await getDoc(docRef);
     const data = docSnap.data()
     const temp = Object.keys(data)

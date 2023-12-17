@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/components/ui/use-toast"
 import { MdAdd} from "react-icons/md"
 import {IoCloudDone} from "react-icons/io5"
@@ -50,6 +51,7 @@ export function AddPublication({reload}) {
     const [type, setType] = useState("Book");
     const [subject, setSubject] = useState("Any");
     const [subjects,setSubjects] = useState([]);
+    const [description,setDescription]=useState("")
   
     const [flag, setFlag] = useState(false);
 
@@ -71,6 +73,7 @@ export function AddPublication({reload}) {
       setThumbnailSubmitStatus(4);
       setFileSubmitStatus(4);
       setSubject("Any");
+      setDescription("")
       LoadSubjects();
     }
     useEffect(()=>{
@@ -144,6 +147,7 @@ export function AddPublication({reload}) {
           Price: Number(price),
           Category:category,
           thumbnail: thumbnailUrl,
+          Description:description,
           URL: fileUrl,
           Time: new Date().toISOString(),
           Type: type,
@@ -167,7 +171,7 @@ export function AddPublication({reload}) {
     
     async function LoadSubjects(){
       try{
-        const docRef = doc(db, "Categories", "s7hdqLUEkfyVJJ6cfbeW");
+        const docRef = doc(db, "Categories", "39liVyLEjII6dtzolxSZ");
         const docSnap = await getDoc(docRef);
         const data = docSnap.data()
         const temp = Object.keys(data)
@@ -186,7 +190,7 @@ export function AddPublication({reload}) {
         <DialogTrigger asChild>
           <Button variant="secondary"  className="gap-x-2"><MdAdd className="scale-125"/> Add Publication</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[625px]">
           <DialogHeader>
             <DialogTitle>Add new Publication</DialogTitle>
           </DialogHeader>
@@ -204,41 +208,48 @@ export function AddPublication({reload}) {
                 <Label htmlFor="author">Author</Label>
                 <Input id="author" className={`${author.length > 1 ? "" : "outline outline-red-600"}`} placeholder="Author of the Book" value={author} onChange={(e)=>setAuthor(e.target.value)} />
               </div>
-              <div className="flex flex-col space-y-2">
-                <Label htmlFor="title">Subject</Label>
-                <Select onValueChange={(value)=>setSubject(value)} defaultValue="Any">
-                  <SelectTrigger id="framework">
-                    <SelectValue placeholder="Select" value={subject}  />
-                  </SelectTrigger>
-                  <SelectContent >
-                    <SelectGroup>
-                    <SelectLabel>Select Speciality</SelectLabel>
-                    <SelectItem value="Any">Any</SelectItem>
-                    {
-                      subjects.map((item)=>{
-                        return <SelectItem key={item} value={item}>{item}</SelectItem>
-                      })
-                    }
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+              
+              <div className="w-full flex justify-between gap-x-3">
+                <div className="flex flex-col space-y-2 w-2/5">
+                  <Label htmlFor="title">Subject</Label>
+                  <Select onValueChange={(value)=>setSubject(value)} defaultValue="Any">
+                    <SelectTrigger id="framework">
+                      <SelectValue placeholder="Select" value={subject}  />
+                    </SelectTrigger>
+                    <SelectContent >
+                      <SelectGroup>
+                      <SelectLabel>Select Speciality</SelectLabel>
+                      <SelectItem value="Any">Any</SelectItem>
+                      {
+                        subjects.map((item)=>{
+                          return <SelectItem key={item} value={item}>{item}</SelectItem>
+                        })
+                      }
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col space-y-2 w-1/5">
+                  <Label htmlFor="Category">Category</Label>
+                  <Select onValueChange={(value)=>setCategory(value)} defaultValue="ALL">
+                    <SelectTrigger id="framework">
+                      <SelectValue placeholder="Select" value={category}  />
+                    </SelectTrigger>
+                    <SelectContent position="absolute" >
+                      <SelectItem value="ALL">All</SelectItem>
+                      <SelectItem value="FREE">Free</SelectItem>
+                      <SelectItem value="PAID">Paid</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col space-y-2 w-2/5">
+                  <Label htmlFor="price">Price</Label>
+                  <Input id="price" className={`${Number(price) > -1 ? "" : "outline outline-red-600"}`} type='number' placeholder="0" value={price} onChange={(e)=>setPrice(e.target.value)} />
+                </div>
               </div>
-              <div className="flex flex-col space-y-2">
-                <Label htmlFor="Category">Category</Label>
-                <Select onValueChange={(value)=>setCategory(value)} defaultValue="ALL">
-                  <SelectTrigger id="framework">
-                    <SelectValue placeholder="Select" value={category}  />
-                  </SelectTrigger>
-                  <SelectContent position="absolute" >
-                    <SelectItem value="ALL">All</SelectItem>
-                    <SelectItem value="FREE">Free</SelectItem>
-                    <SelectItem value="PAID">Paid</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <Label htmlFor="price">Price</Label>
-                <Input id="price" className={`${Number(price) > -1 ? "" : "outline outline-red-600"}`} type='number' placeholder="0" value={price} onChange={(e)=>setPrice(e.target.value)} />
+              <div className="grid w-full gap-1.5">
+                <Label htmlFor="message">Description</Label>
+                <Textarea placeholder="Description" id="message" value={description} onChange={(e)=>setDescription(e.target.value)} />
               </div>
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="price">Type</Label>
