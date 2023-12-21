@@ -1,4 +1,5 @@
 import admin from "@/lib/firebase-admin";
+export const dynamic = 'force-dynamic'
 export async function GET(){
     const db = admin.firestore();
     const docRef = await db.collection("Categories").doc("39liVyLEjII6dtzolxSZ").get();
