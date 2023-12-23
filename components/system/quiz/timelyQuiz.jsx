@@ -13,7 +13,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { MdAdd } from 'react-icons/md'
+import { MdAdd, MdDelete, MdDeleteOutline } from 'react-icons/md'
 import { doc, setDoc } from "firebase/firestore"; 
 import { db } from '@/lib/firebase';
 import { useToast } from '@/components/ui/use-toast'
@@ -24,19 +24,19 @@ import { v4 } from "uuid"
 export function TimelyQuiz({speciality}){
   const {toast} = useToast();
   const [quizTitle, setQuizTitle] = React.useState('');
-  const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...'}]);
+  const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...',Description:""}]);
   const [date, setDate] = React.useState();
   const [current, setCurrent] = React.useState(0);
   const [submit, setSubmit] = React.useState(false);
  
   function reset(){
-    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: 'A'}]);
+    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:""}]);
     setCurrent(0);
     setSubmit(false);
   }
   function addQuestion(){
     if(data.length < 30){
-        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A'}]);
+        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:""}]);
         setCurrent((prev)=>prev+1);
     }
   }
@@ -59,6 +59,9 @@ export function TimelyQuiz({speciality}){
     }
     if(field === 'Correct'){
         newData[index].Correct = value;
+    }
+    if(field === 'Description'){
+        newData[index].Description = value;
     }
     setData(newData);
   }
@@ -117,14 +120,15 @@ export function TimelyQuiz({speciality}){
                 <QuizComp quiz={data[current]} index={current} setQuiz={setQuiz}/>
             </div>
             <div className="w-full flex gap-x-5 ">
-                <Button variant="outline" className=" w-1/2 bg-secondary" onClick={()=>deleteQuestion(current)}>Delete Question {current+1}</Button>
-                <Button onClick={addQuestion} className="w-1/2 gap-x-2"><MdAdd className="scale-125"/>Add Question</Button> 
+                <Button variant="outline" className=" w-1/2 bg-secondary" onClick={()=>deleteQuestion(current)}>Reset Quiz</Button>
+                <Button variant="outline" className=" w-1/2 bg-secondary" onClick={()=>deleteQuestion(current)}><MdDeleteOutline className="scale-125 mr-3"/>Question {current+1}</Button>
+                <Button onClick={addQuestion} className="w-1/2 gap-x-2"><MdAdd className="scale-125"/>Question</Button> 
             </div>
-            <div className="w-full"><Label>Select Date Range :</Label><DatePickerWithRange setNewDate={setDate} className={"w-full"}/></div>
+            
         </div>
         <DialogFooter>      
-            <div className="w-full flex justify-between">
-             
+            <div className="w-full gap-x-3 flex justify-between items-end">
+                <div className="w-full"><Label>Select Date Range :</Label><DatePickerWithRange setNewDate={setDate} className={"w-full"}/></div>
                 <Button disabled={submit} className={'w-full'} onClick={addQuiz}>{submit?<><div className="scale-125 mr-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Adding..</>:"Submit Quiz"}</Button>
             </div>         
                 
@@ -158,10 +162,10 @@ export default function QuizComp({quiz, index,setQuiz}) {
             <Input id="name" placeholder="Option D" value={quiz.D} onChange={(e)=>setQuiz(index,"D",e.target.value)} />
         </div>
     </div>
-    <div className='flex justify-between mt-2'>
-        <RadioGroup defaultValue="A" onValueChange={(val)=>setQuiz(index,"Correct",val)}>
+    <div className='flex justify-between mt-2 gap-x-3'>
+        <RadioGroup className="w-full" defaultValue="A" onValueChange={(val)=>setQuiz(index,"Correct",val)}>
         Choose correct answer
-        <div className='flex gap-x-3'>
+        <div className='flex gap-x-3 w-full'>
             <div className="flex items-center space-x-2">
                 <RadioGroupItem value="A" id="option-one" />
                 <Label htmlFor="">A</Label>
@@ -180,6 +184,11 @@ export default function QuizComp({quiz, index,setQuiz}) {
             </div>
         </div>
         </RadioGroup>
+        <div className="flex flex-col space-y-2 w-full">
+            <Label htmlFor="name">Description</Label>
+            <Input id="name" placeholder="Description" value={quiz.Description} onChange={(e)=>setQuiz(index,"Description",e.target.value)} />
+        </div>
+
 
      </div>
     </>

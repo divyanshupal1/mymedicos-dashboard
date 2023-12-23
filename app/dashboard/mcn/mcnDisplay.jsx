@@ -68,6 +68,7 @@ export function McnDisplay({ data, reload }) {
           message: toastMessage,
         });
       });
+      setNewData([])
       setRefresh(!refresh)
       // Moved router.refresh outside of deleteDoc.then to ensure refresh is triggered
       router.refresh();
@@ -76,6 +77,7 @@ export function McnDisplay({ data, reload }) {
         title: "Error",
         message: "Something went wrong",
       });
+  
       setRefresh(!refresh)
     }
   }
