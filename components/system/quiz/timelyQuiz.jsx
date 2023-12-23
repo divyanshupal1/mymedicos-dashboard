@@ -97,7 +97,7 @@ export function TimelyQuiz({speciality}){
   }
 
   return (
-    <Dialog onOpenChange={reset}>
+    <Dialog>
       <DialogTrigger asChild>
         <Button variant="secondary"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
       </DialogTrigger>
@@ -120,7 +120,7 @@ export function TimelyQuiz({speciality}){
                 <QuizComp quiz={data[current]} index={current} setQuiz={setQuiz}/>
             </div>
             <div className="w-full flex gap-x-5 ">
-                <Button variant="outline" className=" w-1/2 bg-secondary" onClick={()=>deleteQuestion(current)}>Reset Quiz</Button>
+                <Button variant="outline" className=" w-1/2 bg-secondary" onClick={reset}>Reset Quiz</Button>
                 <Button variant="outline" className=" w-1/2 bg-secondary" onClick={()=>deleteQuestion(current)}><MdDeleteOutline className="scale-125 mr-3"/>Question {current+1}</Button>
                 <Button onClick={addQuestion} className="w-1/2 gap-x-2"><MdAdd className="scale-125"/>Question</Button> 
             </div>
