@@ -24,19 +24,19 @@ import { v4 } from "uuid"
 export function TimelyQuiz({speciality}){
   const {toast} = useToast();
   const [quizTitle, setQuizTitle] = React.useState('');
-  const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...',Description:"",Image:""}]);
+  const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...',Description:"",Image:"",id:v4()}]);
   const [date, setDate] = React.useState();
   const [current, setCurrent] = React.useState(0);
   const [submit, setSubmit] = React.useState(false);
  
   function reset(){
-    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:""}]);
+    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:"",id:v4()}]);
     setCurrent(0);
     setSubmit(false);
   }
   function addQuestion(){
     if(data.length < 30){
-        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:""}]);
+        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:"",id:v4()}]);
         setCurrent((prev)=>prev+1);
     }
   }
@@ -157,7 +157,7 @@ export default function QuizComp({quiz, index,setQuiz}) {
   },[index])
 
   async function uploadThumbnail(e){
-    console.log("uploading")
+    // console.log("uploading")
     setThumbnail((prev)=>e.target.files[0]);
     setThumbnailSubmitStatus(0);
     if(e.target.files[0].type != "image/png" && e.target.files[0].type != "image/jpeg"){
@@ -173,7 +173,7 @@ export default function QuizComp({quiz, index,setQuiz}) {
       }, 
       (error) => {
         setThumbnailSubmitStatus(2);
-        console.log(e)
+        // console.log(e)
       }, 
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {

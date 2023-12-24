@@ -5,9 +5,8 @@ import { collection, getDocs, where, query, updateDoc, deleteDoc, doc } from 'fi
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
 
-// Extracted a separate function to fetch user data by phone number
+
 async function getUserDataByPhoneNumber(phoneNumber) {
   const q = query(collection(db, 'users'), where('Phone Number', '==', phoneNumber));
   const querySnapshot = await getDocs(q);
@@ -29,28 +28,34 @@ async function getUserDataByPhoneNumber(phoneNumber) {
   return userData;
 }
 
-export function McnDisplay({ data, reload }) {
+export function McnDisplay() {
   const { toast } = useToast();
-  const router = useRouter();
   const [newData, setNewData] = useState([]);
-  const [refresh,setRefresh] =useState(false)
 
-  useEffect(() => {
-    // Use Promise.all to wait for all async calls to complete
-    Promise.all(
-      data.map(async (item) => {
-        const userData = await getUserDataByPhoneNumber(item[1]['User']);
-        const updatedData = userData.map((user) => ({
-          ...user,
-          mcn: item[1]['Medical Council Number'],
-          docid: item[0],
-        }));
-        setNewData((prevData) => [...prevData, ...updatedData]);
-      })
-    );
+  async function loadData(){
+    var temp =[]
+    const mcn_docSnap = await getDocs(collection(db, "Medical Council Number Request"));
+    mcn_docSnap.forEach( async (doc) => {
+        var id = doc.id;
+        var data = doc.data();
+        const userData = await getUserDataByPhoneNumber(data['User']);
+        temp.push({...userData,mcn:data['Medical Council Number'],docid:id})
+    });
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, 3000);
+    }).then(() => {
+      setNewData(temp);
+    });
 
-    // Added missing parentheses to invoke the router.refresh method
-  }, [data,refresh]);
+  }
+
+
+  useEffect(() => {    
+    loadData();
+  },[]);
+
 
   async function handleVerification(docid, user_doc, index, isVerified) {
     try {
@@ -67,18 +72,18 @@ export function McnDisplay({ data, reload }) {
           title: isVerified ? "MCN Verified" : "MCN Rejected",
           message: toastMessage,
         });
+        setNewData(()=>[])
+        loadData();
       });
-      setNewData([])
-      setRefresh(!refresh)
-      // Moved router.refresh outside of deleteDoc.then to ensure refresh is triggered
-      router.refresh();
+
     } catch (e) {
+      console.log(e);
       toast({
         title: "Error",
         message: "Something went wrong",
       });
-  
-      setRefresh(!refresh)
+      setNewData(()=>[])
+      loadData();
     }
   }
 
@@ -101,15 +106,15 @@ export function McnDisplay({ data, reload }) {
             {newData.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.email}</TableCell>
-                <TableCell>{item.phone}</TableCell>
-                <TableCell>{item.mcn}</TableCell>
+                <TableCell>{item[0].name}</TableCell>
+                <TableCell>{item[0].email}</TableCell>
+                <TableCell>{item[0].phone}</TableCell>
+                <TableCell>{item[0].mcn}</TableCell>
                 <TableCell className="flex gap-x-3 justify-end">
-                  <Button className="btn btn-primary" onClick={() => handleVerification(item.docid, item.user_doc, index, true)}>
+                  <Button className="btn btn-primary" onClick={() => handleVerification(item.docid, item[0].user_doc, index, true)}>
                     Verify
                   </Button>
-                  <Button variant="secondary" className="btn btn-primary" onClick={() => handleVerification(item.docid, item.user_doc, index, false)}>
+                  <Button variant="secondary" className="btn btn-primary" onClick={() => handleVerification(item.docid, item[0].user_doc, index, false)}>
                     Reject
                   </Button>
                 </TableCell>
