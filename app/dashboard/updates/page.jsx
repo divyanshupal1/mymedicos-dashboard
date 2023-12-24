@@ -17,7 +17,10 @@ export default function Updates() {
 
     const docRef = doc(db, "Updates", "States");
     const docSnap = await getDoc(docRef);
-     setDocs(docSnap.data().data)
+     var data = docSnap.data().data 
+     var lota = []
+     data.sort()
+     setDocs(data)
      setLoading(false)
    }
    catch(e){
@@ -45,8 +48,8 @@ export default function Updates() {
               <AiOutlineLoading3Quarters className="animate-spin text-4xl text-slate-300"/>
             </div> 
             :
-            <div className="w-full flex gap-3 p-3">
-             {docs.map((state,index)=><Link href={'/dashboard/updates/'+state} key={index}><div className="p-3 bg-secondary rounded-lg">{state}</div></Link>)}
+            <div className=" w-1/2 h-full gap-3 flex flex-col flex-wrap p-3">
+             {docs.map((state,index)=><Link href={'/dashboard/updates/'+state} key={index} className="w-full"><div className="p-3 bg-secondary hover:bg-primary hover:text-white rounded-lg m-0">{state}</div></Link>)}
             </div>
             // <UpdateCardGroup docs={docs} reload={LoadUpdates}/>
           }

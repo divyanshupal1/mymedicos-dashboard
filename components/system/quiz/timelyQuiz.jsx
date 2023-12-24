@@ -24,19 +24,19 @@ import { v4 } from "uuid"
 export function TimelyQuiz({speciality}){
   const {toast} = useToast();
   const [quizTitle, setQuizTitle] = React.useState('');
-  const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...',Description:""}]);
+  const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...',Description:"",Image:""}]);
   const [date, setDate] = React.useState();
   const [current, setCurrent] = React.useState(0);
   const [submit, setSubmit] = React.useState(false);
  
   function reset(){
-    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:""}]);
+    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:""}]);
     setCurrent(0);
     setSubmit(false);
   }
   function addQuestion(){
     if(data.length < 30){
-        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:""}]);
+        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:""}]);
         setCurrent((prev)=>prev+1);
     }
   }
@@ -62,6 +62,9 @@ export function TimelyQuiz({speciality}){
     }
     if(field === 'Description'){
         newData[index].Description = value;
+    }
+    if(field === 'Image'){
+        newData[index].Image = value;
     }
     setData(newData);
   }
@@ -137,13 +140,78 @@ export function TimelyQuiz({speciality}){
     </Dialog>
   )
 }
+import {IoCloudDone} from "react-icons/io5"
+import { useState } from "react";
+import { ref,uploadBytesResumable,getDownloadURL } from "firebase/storage"
+import { storage } from "@/lib/firebase"
+
 export default function QuizComp({quiz, index,setQuiz}) {
+
+  const [thumbnail, setThumbnail] = useState(null);
+  const [thumbnailSubmitStatus, setThumbnailSubmitStatus] = useState(4);
+  const [thumbnailSubmitProgress, setThumbnailSubmitProgress] = useState(0);
+
+  React.useEffect(()=>{
+    setThumbnailSubmitStatus(4)
+    setThumbnail(null)
+  },[index])
+
+  async function uploadThumbnail(e){
+    console.log("uploading")
+    setThumbnail((prev)=>e.target.files[0]);
+    setThumbnailSubmitStatus(0);
+    if(e.target.files[0].type != "image/png" && e.target.files[0].type != "image/jpeg"){
+      setThumbnailSubmitStatus(3);
+      return;
+    }
+    const storageRef = ref(storage, 'Quiz/thumbnails/'+v4()+e.target.files[0].name);
+    const uploadTask = uploadBytesResumable(storageRef, e.target.files[0]);
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setThumbnailSubmitProgress(progress);
+      }, 
+      (error) => {
+        setThumbnailSubmitStatus(2);
+        console.log(e)
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setThumbnailSubmitStatus(1);
+          setQuiz(index,"Image",downloadURL);
+        });
+      }
+    );
+  }
+
   return (
     <>
-    <div className="flex flex-col space-y-2">
+    <div className="w-full flex gap-x-3">
+      <div className="flex flex-col space-y-2 w-2/3">
+          <Label htmlFor="name">Question</Label>
+          <Input id="name" value={quiz.Question} onChange={(e)=>setQuiz(index,"Q",e.target.value)} placeholder="Type your question..." />
+      </div>
+      <div className="flex flex-col space-y-2 relative">
+                <Label htmlFor="price">Select Thumbnail</Label>
+                <Input placeholder="image" value={quiz.Image} readOnly />
+                <Input id="price"
+                 accept="image/png, image/jpeg"
+                 onChange={(e)=>{
+                  uploadThumbnail(e);
+                 }}
+                 className="absolute bottom-0 left-0 opacity-0 z-20"
+                 type='file'
+                />
+                <div className="scale-125 absolute right-1.5 bottom-1.5  p-1 rounded bg-white dark:bg-slate-950">
+                  {quiz.Image && <IoCloudDone className="text-green-600 font-bold "/>}
+                  {thumbnailSubmitStatus == 0 && thumbnail && <AiOutlineLoading3Quarters className="text-green-600 font-bold animate-spin"/>}
+                 </div>
+      </div>
+    </div>
+    {/* <div className="flex flex-col space-y-2">
         <Label htmlFor="name">Question</Label>
         <Input id="name" value={quiz.Question} onChange={(e)=>setQuiz(index,"Q",e.target.value)} placeholder="Type your question..." />
-    </div>
+    </div> */}
     <div className='w-full grid grid-cols-2 gap-4 mt-3'>
         <div className="flex flex-col space-y-2">
             <Label htmlFor="name">A</Label>
