@@ -11,7 +11,7 @@ function Page({params}) {
 
     React.useEffect(() => {
         const loadDets = async ()=>{
-            var reqi = `https://mymedicos-dashboard-divyanshup11.vercel.app/api/ecom/checkout/orderDetails/${params.orderID}`  
+            var reqi = `https://mymedicos-dashboard.vercel.app/api/ecom/checkout/orderDetails/${params.orderID}`  
             const result = await axios.get(reqi);
             setResult(result);
         }
