@@ -20,4 +20,5 @@ jobs:
 
       - name: Execute Script on Remote Server
         run: |
-          ssh root@195.35.6.155
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+          root@195.35.6.155 "cd mymedicos-dashboard && ./run.sh"
