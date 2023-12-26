@@ -20,4 +20,4 @@ jobs:
 
       - name: Execute Script on Remote Server
         run: |
-          ssh root@195.35.6.155 'bash -s' < ./root/mymedicos-dashboard/run.sh
+          ssh root@195.35.6.155 'bash -s' < ./mymedicos-dashboard/run.sh
