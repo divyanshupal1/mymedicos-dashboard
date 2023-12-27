@@ -18,6 +18,9 @@ import { db } from '@/lib/firebase';
 import { useToast } from '@/components/ui/use-toast'
 import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { v4 } from "uuid"
+import {IoCloudDone} from "react-icons/io5"
+import { ref,uploadBytesResumable,getDownloadURL } from "firebase/storage"
+import { storage } from "@/lib/firebase"
 
 export function AddDailyQuiz({speciality}){
   const {toast} = useToast();
@@ -26,7 +29,11 @@ export function AddDailyQuiz({speciality}){
   const [optionB, setOptionB] = React.useState('')
   const [optionC, setOptionC] = React.useState('')
   const [optionD, setOptionD] = React.useState('')
+  const [description, setDescription] = React.useState('')
   const [answer, setAnswer] = React.useState('')
+  const [thumbnail, setThumbnail] = React.useState(null);
+  const [thumbnailSubmitStatus, setThumbnailSubmitStatus] = React.useState(4);
+  const [thumbnailSubmitProgress, setThumbnailSubmitProgress] = React.useState(0);
   const [date, setDate] = React.useState(new Date().toDateString());
   const [submit, setSubmit] = React.useState(false);
 
@@ -54,6 +61,8 @@ export function AddDailyQuiz({speciality}){
       B: optionB,
       C: optionC,
       D: optionD,
+      Description:description,
+      Thumbnail: thumbnail,
       Correct: answer,
       Date: date,
       speciality: speciality
@@ -64,6 +73,31 @@ export function AddDailyQuiz({speciality}){
       })
     });
     
+  }
+  async function uploadThumbnail(e){
+
+    setThumbnailSubmitStatus(0);
+    if(e.target.files[0].type != "image/png" && e.target.files[0].type != "image/jpeg"){
+      setThumbnailSubmitStatus(3);
+      return;
+    }
+    const storageRef = ref(storage, 'Quiz/thumbnails/'+v4()+e.target.files[0].name);
+    const uploadTask = uploadBytesResumable(storageRef, e.target.files[0]);
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setThumbnailSubmitProgress(progress);
+      }, 
+      (error) => {
+        setThumbnailSubmitStatus(2);
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setThumbnailSubmitStatus(1);
+          setThumbnail(downloadURL);
+        });
+      }
+    );
   }
 
   return (
@@ -130,8 +164,27 @@ export function AddDailyQuiz({speciality}){
                   setDate(date.toDateString())
                 }} />
               </div>
-
           </div>
+          <div className="flex flex-col space-y-2">
+              <Label htmlFor="name">Description</Label>
+              <Input id="name" value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Description ..." />
+          </div>
+          <div className="flex flex-col space-y-2 relative">
+                <Label htmlFor="price">Select Thumbnail</Label>
+                <Input placeholder="image" value={thumbnail} readOnly />
+                <Input id="price"
+                 accept="image/png, image/jpeg"
+                 onChange={(e)=>{
+                  uploadThumbnail(e);
+                 }}
+                 className="absolute bottom-0 left-0 opacity-0 z-20"
+                 type='file'
+                />
+                <div className="scale-125 absolute right-1.5 bottom-1.5  p-1 rounded bg-white dark:bg-slate-950">
+                  {thumbnail && <IoCloudDone className="text-green-600 font-bold "/>}
+                  {thumbnailSubmitStatus == 0 && thumbnail && <AiOutlineLoading3Quarters className="text-green-600 font-bold animate-spin"/>}
+                 </div>
+      </div>
         </div>
         <DialogFooter>
           <Button disabled={submit} onClick={addQuiz}>{submit?<><div className="scale-125 mr-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Adding..</>:"Submit Quiz"}</Button>

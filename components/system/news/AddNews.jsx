@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Select,SelectTrigger,SelectValue, SelectContent,SelectItem } from "@/components/ui/select"
 import { useToast } from "@/components/ui/use-toast"
 import { MdAdd} from "react-icons/md"
 import {IoCloudDone} from "react-icons/io5"
@@ -33,6 +34,7 @@ export function AddNews({reload}) {
     const [description, setDescription] = useState("");
     const [URL, setURL] = useState("");
     const [publishStatus, setPublishStatus] = useState(0);
+    const [val, setVal] = useState("News");
   
     const [flag, setFlag] = useState(false);
 
@@ -45,11 +47,11 @@ export function AddNews({reload}) {
       setThumbnailSubmitStatus(4);
     }
     useEffect(()=>{
-      if(thumbnail && thumbnailUrl.length>0 && title.length > 0 && description.length > 0 && URL.length > 0 && thumbnailUrl != null){
+      if( title.length > 0 ){
         setFlag(true);
       }
       else setFlag(false);
-    },[title,thumbnailUrl,thumbnail,description,URL])
+    },[title])
 
     async function uploadThumbnail(e){
       setThumbnail((prev)=>e.target.files[0]);
@@ -84,6 +86,7 @@ export function AddNews({reload}) {
           Description: description,
           URL: URL,
           thumbnail: thumbnailUrl,
+          type: val,
           Time: new Date().toISOString(),
         });
         toast({
@@ -121,19 +124,30 @@ export function AddNews({reload}) {
                   onChange={(e)=>setTitle(e.target.value)} 
                 />
               </div>
+              <div className="flex flex-col space-y-2">
+                <Label htmlFor="price">Type</Label>
+                <ToggleGroup type="single" value={val} defaultValue="News" className="w-full justify-between gap-x-3" onValueChange={(val)=>setVal(val)}>
+                  <ToggleGroupItem value="News" aria-label="Toggle bold" className="w-1/2">
+                    <p>News</p>
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="Notice" aria-label="Toggle italic" className="w-1/2">
+                    <p>Notice</p>
+                  </ToggleGroupItem>
+                </ToggleGroup>
+              </div>
               <div className="grid w-full gap-1.5">
                 <Label htmlFor="message">Description</Label>
                 <Textarea className={`${description.length > 1 ? "" : "outline outline-red-600"}`} placeholder="Description" id="message" value={description} onChange={(e)=>setDescription(e.target.value)} />
               </div>
               <div className="flex flex-col space-y-2">
                 <Label htmlFor="author">Link to Article</Label>
-                <Input id="author" className={`${URL.length > 1 ? "" : "outline outline-red-600"}`} placeholder="Link to news article" value={URL} onChange={(e)=>setURL(e.target.value)} />
+                <Input id="author" placeholder="Link to news article" value={URL} onChange={(e)=>setURL(e.target.value)} />
               </div>
               <div className="flex flex-col space-y-1.5 relative">
                 <Label htmlFor="price">Select Thumbnail</Label>
                 <Input id="price"
                  accept="image/png, image/jpeg"
-                 className={`${thumbnail ? "" : "outline outline-red-600"}`}
+                 
                  onChange={(e)=>{
                   uploadThumbnail(e);
                  }}
@@ -159,5 +173,26 @@ export function AddNews({reload}) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    )
+  }
+
+  import {
+    ToggleGroup,
+    ToggleGroupItem,
+  } from "@/components/ui/toggle-group"
+  
+  export function ToggleGroupDemo({setVal,val}) {
+    return (
+      <ToggleGroup type="single" value={val} defaultValue="Book" className="w-ful justify-between" onValueChange={(val)=>setVal(val)}>
+        <ToggleGroupItem value="Textbook" aria-label="Toggle bold" className="w-1/3">
+          <p>Textbook</p>
+        </ToggleGroupItem>
+        <ToggleGroupItem value="Research" aria-label="Toggle italic" >
+          <p>Research-Paper</p>
+        </ToggleGroupItem>
+        <ToggleGroupItem value="Book" aria-label="Toggle strikethrough" className="w-1/4">
+          <p>Book</p>
+        </ToggleGroupItem>
+      </ToggleGroup>
     )
   }
