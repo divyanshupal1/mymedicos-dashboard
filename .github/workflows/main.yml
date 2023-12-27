@@ -1,4 +1,4 @@
-name: Execute Script on Remote Server
+name: Deploy on VPS
 
 on:
   push:
