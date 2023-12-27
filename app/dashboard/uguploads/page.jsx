@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Ugcards from './ugcard';
-import { Button } from '@/components/ui/button';
+
 
 async function News() {
   return (
