@@ -13,7 +13,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { MdAdd, MdDelete, MdDeleteOutline } from 'react-icons/md'
+import { MdAdd, MdDelete, MdDeleteOutline, MdEdit } from 'react-icons/md'
 import { doc, setDoc } from "firebase/firestore"; 
 import { db } from '@/lib/firebase';
 import { useToast } from '@/components/ui/use-toast'
@@ -21,24 +21,22 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 import { DatePickerWithRange } from "./datePicker"
 import { v4 } from "uuid"
 
-export function TimelyQuiz({speciality}){
+export function TimelyQuiz({edit,speciality,quiz,id,reload=()=>{}}){
   const {toast} = useToast();
-  const [quizTitle, setQuizTitle] = React.useState('');
-  const [data, setData] = React.useState([{Question: 'Loading...', A: 'Loading...', B: 'Loading...', C: 'Loading...', D: 'Loading...', Correct: 'Loading...',Description:"",Image:"",id:v4()}]);
+  const [quizTitle, setQuizTitle] = React.useState(quiz?quiz.title:'');
+  const [data, setData] = React.useState(quiz?quiz.Data:[{Question: '', A: '', B: '', C: '', D: '', Correct: '',Description:"",Image:"",id:v4()}]);
   const [date, setDate] = React.useState();
   const [current, setCurrent] = React.useState(0);
   const [submit, setSubmit] = React.useState(false);
  
   function reset(){
-    setData([{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:"",id:v4()}]);
+    setData(quiz?quiz.Data:[{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:"",id:v4()}]);
     setCurrent(0);
     setSubmit(false);
   }
   function addQuestion(){
-    if(data.length < 30){
-        setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:"",id:v4()}]);
-        setCurrent((prev)=>prev+1);
-    }
+    setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:"",id:v4()}]);
+    setCurrent((prev)=>prev+1);
   }
   function setQuiz(index,field,value){
     const newData = [...data];
@@ -82,7 +80,7 @@ export function TimelyQuiz({speciality}){
   async function addQuiz(){
     
     setSubmit(true);
-    await setDoc(doc(db, "PGupload", "Weekley", "Quiz",v4()), {
+    await setDoc(doc(db, "PGupload", "Weekley", "Quiz",id?id:v4()), {
       title: quizTitle,
       Data:data,
       from: date.from,
@@ -93,6 +91,7 @@ export function TimelyQuiz({speciality}){
       toast({
         title: 'Quiz Added',
       })
+      reload();
     }).catch((e)=>{
         setSubmit(false);
     });
@@ -102,13 +101,17 @@ export function TimelyQuiz({speciality}){
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
+        {edit?
+          <div className="inline p-1 rounded-md hover:bg-slate-300"><MdEdit className='scale-125'/></div>
+          :
+          <Button variant="secondary"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
+        }
       </DialogTrigger>
       <DialogContent className="sm:max-w-[580px]">
         <DialogHeader>
-          <DialogTitle>Add Quiz</DialogTitle>
+          <DialogTitle>{edit?"Edit":"Add"} Quiz</DialogTitle>
           <DialogDescription>
-            Add a new quiz
+          {edit?"Edit a quiz":"Add a new quiz"}  
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4 w-full">
@@ -116,7 +119,7 @@ export function TimelyQuiz({speciality}){
                 <Label htmlFor="name">Quiz Title</Label>
                 <Input id="name" value={quizTitle} onChange={(e)=>setQuizTitle(e.target.value)} placeholder="Title of Quiz" />
             </div>
-            <div className="w-full flex flex-wrap  gap-x-1 gap-y-1 bg-secondary p-2 rounded-md">
+            <div className="w-full flex flex-wrap  gap-x-1 gap-y-1 bg-secondary p-2 rounded-md max-h-24 overflow-y-scroll">
                 {data.map((item, index)=><div key={index} className={`w-7 h-7 flex justify-center items-center rounded-full cursor-pointer ${current==index?"bg-primary":""}`} tabIndex={index} onClick={()=>setCurrent(index)} >{index+1}</div>)}
             </div>
             <div className="w-full mt-3">
@@ -132,7 +135,7 @@ export function TimelyQuiz({speciality}){
         <DialogFooter>      
             <div className="w-full gap-x-3 flex justify-between items-end">
                 <div className="w-full"><Label>Select Date Range :</Label><DatePickerWithRange setNewDate={setDate} className={"w-full"}/></div>
-                <Button disabled={submit} className={'w-full'} onClick={addQuiz}>{submit?<><div className="scale-125 mr-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Adding..</>:"Submit Quiz"}</Button>
+                <Button disabled={submit} className={'w-full'} onClick={addQuiz}>{submit?<><div className="scale-125 mr-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Adding..</>:(edit?"Update Quiz":"Submit Quiz")}</Button>
             </div>         
                 
          </DialogFooter>

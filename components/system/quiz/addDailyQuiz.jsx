@@ -12,7 +12,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { MdAdd } from 'react-icons/md'
+import { MdAdd ,MdEdit} from 'react-icons/md'
 import { doc, setDoc } from "firebase/firestore"; 
 import { db } from '@/lib/firebase';
 import { useToast } from '@/components/ui/use-toast'
@@ -22,19 +22,20 @@ import {IoCloudDone} from "react-icons/io5"
 import { ref,uploadBytesResumable,getDownloadURL } from "firebase/storage"
 import { storage } from "@/lib/firebase"
 
-export function AddDailyQuiz({speciality}){
+export function AddDailyQuiz({speciality,edit,reload=()=>{},quiz,id}){
+
   const {toast} = useToast();
-  const [question, setQuestion] = React.useState('')
-  const [optionA, setOptionA] = React.useState('')
-  const [optionB, setOptionB] = React.useState('')
-  const [optionC, setOptionC] = React.useState('')
-  const [optionD, setOptionD] = React.useState('')
-  const [description, setDescription] = React.useState('')
-  const [answer, setAnswer] = React.useState('')
-  const [thumbnail, setThumbnail] = React.useState(null);
+  const [question, setQuestion] = React.useState(quiz?quiz.Question:'')
+  const [optionA, setOptionA] = React.useState(quiz?quiz.A:'')
+  const [optionB, setOptionB] = React.useState(quiz?quiz.B:'')
+  const [optionC, setOptionC] = React.useState(quiz?quiz.C:'')
+  const [optionD, setOptionD] = React.useState(quiz?quiz.D:'')
+  const [description, setDescription] = React.useState(quiz?quiz.Description:'')
+  const [answer, setAnswer] = React.useState(quiz?quiz.Correct:'')
+  const [thumbnail, setThumbnail] = React.useState(quiz?quiz.Thumbnail:null);
   const [thumbnailSubmitStatus, setThumbnailSubmitStatus] = React.useState(4);
   const [thumbnailSubmitProgress, setThumbnailSubmitProgress] = React.useState(0);
-  const [date, setDate] = React.useState(new Date().toDateString());
+  const [date, setDate] = React.useState(quiz?new Date(quiz.Date):new Date());
   const [submit, setSubmit] = React.useState(false);
 
   function reset(){
@@ -55,7 +56,7 @@ export function AddDailyQuiz({speciality}){
       return;
     }
     setSubmit(true);
-    await setDoc(doc(db, "PGupload", "Daily", "Quiz",v4()), {
+    await setDoc(doc(db, "PGupload", "Daily", "Quiz",edit?id:v4()), {
       Question: question,
       A: optionA,
       B: optionB,
@@ -64,10 +65,11 @@ export function AddDailyQuiz({speciality}){
       Description:description,
       Thumbnail: thumbnail,
       Correct: answer,
-      Date: date,
-      speciality: speciality
+      Date: date.toDateString(),
+      speciality: quiz?quiz.speciality:speciality
     }).then(()=>{
       setSubmit(false);
+      reload();
       toast({
         title: 'Quiz Added',
       })
@@ -101,15 +103,19 @@ export function AddDailyQuiz({speciality}){
   }
 
   return (
-    <Dialog onOpenChange={reset}>
+    <Dialog >
       <DialogTrigger asChild>
-        <Button variant="secondary"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
+      {edit?
+          <div className="inline p-1 rounded-md hover:bg-slate-300"><MdEdit className='scale-125'/></div>
+          :
+          <Button variant="secondary"><MdAdd className='scale-125 mr-2'/> Add Quiz</Button>
+        }
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Quiz</DialogTitle>
+          <DialogTitle>{edit?"Edit":"Add"} Quiz</DialogTitle>
           <DialogDescription>
-            Add a new quiz
+          {edit?"Edit a quiz":"Add a new quiz"}  
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -136,7 +142,7 @@ export function AddDailyQuiz({speciality}){
             </div>
           </div>
           <div className='flex justify-between'>
-              <RadioGroup defaultValue="A" onValueChange={(val)=>setAnswer(val)}>
+              <RadioGroup defaultValue={quiz?quiz.Correct:"A"} onValueChange={(val)=>setAnswer(val)}>
                 Choose correct answer
                 <div className='flex gap-x-3'>
                   <div className="flex items-center space-x-2">
@@ -157,12 +163,16 @@ export function AddDailyQuiz({speciality}){
                   </div>
                 </div>
               </RadioGroup>
-              <div className="flex flex-col space-y-2 w-1/2">
+              <div className="flex flex-col space-y-2 w-1/2 relative">
                 <Label htmlFor="name">Date</Label>
+                <Input id="date" value={date.toDateString()} onChange={()=>{}} />
                 <Input id="name" type="date" placeholder="Option D" onChange={(e)=>{
+                  console.log(e.target.value)
                   const date = new Date(e.target.value)
-                  setDate(date.toDateString())
-                }} />
+                  setDate(date)
+                }} 
+                className="absolute bottom-0 right-0  z-20 w-[40px] overflow-hidden"
+                />
               </div>
           </div>
           <div className="flex flex-col space-y-2">
@@ -187,7 +197,7 @@ export function AddDailyQuiz({speciality}){
       </div>
         </div>
         <DialogFooter>
-          <Button disabled={submit} onClick={addQuiz}>{submit?<><div className="scale-125 mr-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Adding..</>:"Submit Quiz"}</Button>
+          <Button disabled={submit} onClick={addQuiz}>{submit?<><div className="scale-125 mr-3"><AiOutlineLoading3Quarters className="text-white animate-spin"/></div> Adding..</>:(edit?"Update Quiz":"Submit Quiz")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
