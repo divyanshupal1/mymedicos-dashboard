@@ -11,7 +11,7 @@ function Page({params}) {
 
     React.useEffect(() => {
         const loadDets = async ()=>{
-            var reqi = `https://mymedicos-dashboard.vercel.app/api/ecom/checkout/orderDetails/${params.orderID}`  
+            var reqi = `https://admin.mymedicos.in/api/ecom/checkout/orderDetails/${params.orderID}`  
             const result = await axios.get(reqi);
             setResult(result);
         }
@@ -59,7 +59,7 @@ function Page({params}) {
           "name": "MyMedicos",
           "description": `Order for ${result.data.user.Name}`,
           "order_id": order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-          "callback_url": `https://mymedicos-dashboard.vercel.app/api/checkout/callback/`,
+          "callback_url": `https://admin.mymedicos.in/api/checkout/callback/`,
           "prefill": {
               "name": result.data.user.Name,
               "email": result.data.user["Email ID"],
