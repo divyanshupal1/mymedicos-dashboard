@@ -29,7 +29,7 @@ export async function POST(req,res){
         console.log(...response.data.items);
         const user = await admin.firestore().collection("users").where("Phone Number", "==", response.data.user.phone).get()
         const user_id = user.docs[0].id;
-        var library = user.docs[0].data().library;
+        var library = user.docs[0].data().library ? user.docs[0].data().library : [];
         console.log(library,"library");
         var newLibrary = [...library, ...response.data.items];
         admin.firestore().collection("users").doc(user_id).update({
