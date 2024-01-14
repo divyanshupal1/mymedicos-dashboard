@@ -21,6 +21,7 @@ export async function GET(req,{params}) {
     const db = admin.firestore();
     const docSnap = await db.collection('users').doc(id[0]).get();
     const user = docSnap.data();
+    console.log(docSnap.data());
     const docid = docSnap.id;
     const cart = user.cart;
     if(cart.length === 0){

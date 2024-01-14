@@ -11,7 +11,7 @@ function Page({params}) {
 
     React.useEffect(() => {
         const loadDets = async ()=>{
-            var reqi = `https://admin.mymedicos.in/api/ecom/checkout/orderDetails/${params.orderID}`  
+            var reqi = `${FRONTEND_HOST}/api/ecom/checkout/orderDetails/${params.orderID}`  
             const result = await axios.get(reqi);
             setResult(result);
         }
@@ -53,13 +53,20 @@ function Page({params}) {
         const { amount, order_id, currency } = result.data;
     
         const options = {
-          "key": process.env.RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
+          "key": "rzp_test_v9goF6NcrK9Urn", // Enter the Key ID generated from the Dashboard
           "amount":amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
           "currency": currency,
           "name": "MyMedicos",
           "description": `Order for ${result.data.user.Name}`,
           "order_id": order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-          "callback_url": `https://admin.mymedicos.in/api/checkout/callback/`,
+          "handler": function (response){
+            axios.post(`${FRONTEND_HOST}/api/ecom/checkout/callback/`,{
+                "razorpay_payment_id": response.razorpay_payment_id,
+                "razorpay_order_id": response.razorpay_order_id,
+                "razorpay_signature": response.razorpay_signature,
+                "orderID": params.orderID
+            })
+           },
           "prefill": {
               "name": result.data.user.Name,
               "email": result.data.user["Email ID"],
@@ -126,6 +133,7 @@ export default Page
 
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase";
+import { FRONTEND_HOST } from '@/app/constants';
 
 export function ItemCard({id}){
     const [result, setResult] = React.useState(null);
