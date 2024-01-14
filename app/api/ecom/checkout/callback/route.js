@@ -24,7 +24,7 @@ export async function POST(req,res){
         return Response.redirect(`${FRONTEND_HOST}/checkout/failure`);
     }
 
-    await axios.get(`http://localhost:3000/api/ecom/checkout/orderDetails/${razorpay_order_id}`)
+    await axios.get(`${FRONTEND_HOST}/api/ecom/checkout/orderDetails/${razorpay_order_id}`)
     .then(async(response) => {
         console.log(...response.data.items);
         const user = await admin.firestore().collection("users").where("Phone Number", "==", response.data.user.phone).get()

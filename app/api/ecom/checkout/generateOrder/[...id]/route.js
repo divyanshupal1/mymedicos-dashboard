@@ -17,10 +17,9 @@ export async function GET(req,{params}) {
     });
 
   try{
-    // const {id} = params;
-    const {id} = {id:["3vP3eycTsWZWFuavtq9I"]};
+    const {id} = params;
     const db = admin.firestore();
-    const docSnap = await db.collection('users').doc("3vP3eycTsWZWFuavtq9I").get();
+    const docSnap = await db.collection('users').doc(id[0]).get();
     if(!docSnap.exists){
         return new Response(JSON.stringify({status:"error",message:"user not found"}));
     }
