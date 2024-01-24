@@ -106,10 +106,10 @@ export function McnDisplay() {
             {newData.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{item[0].name}</TableCell>
-                <TableCell>{item[0].email}</TableCell>
-                <TableCell>{item[0].phone}</TableCell>
-                <TableCell>{item[0].mcn}</TableCell>
+                <TableCell>{item[0]?.name}</TableCell>
+                <TableCell>{item[0]?.email}</TableCell>
+                <TableCell>{item[0]?.phone}</TableCell>
+                <TableCell>{item[0]?.mcn}</TableCell>
                 <TableCell className="flex gap-x-3 justify-end">
                   <Button className="btn btn-primary" onClick={() => handleVerification(item.docid, item[0].user_doc, index, true)}>
                     Verify

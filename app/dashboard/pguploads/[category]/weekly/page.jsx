@@ -25,7 +25,6 @@ export default function Home({params}) {
      });
      setDocs(temp)
      setLoading(false)
-     console.log(temp)
    }
    catch(e){
     console.log(e)
@@ -104,8 +103,6 @@ export function CardGroup({docs,reload}){
     var end = new Timestamp(quiz.to.seconds,quiz.to.nanoseconds).toDate()
     var today = new Date();
 
-    console.log(start<=today && end>=today)
-    // var date = new Date(quiz.Time).toLocaleDateString()
     return (
       <div className="w-[250px]  p-3 rounded-md overflow-hidden border-2 bg-slate-800 bg-opacity-10 relative">
         <div className="w-full relative">

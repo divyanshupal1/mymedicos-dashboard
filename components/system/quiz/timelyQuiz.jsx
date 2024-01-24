@@ -91,6 +91,7 @@ export function TimelyQuiz({edit,speciality,quiz,id,reload=()=>{}}){
       toast({
         title: 'Quiz Added',
       })
+      reset();
       reload();
     }).catch((e)=>{
         setSubmit(false);
@@ -150,6 +151,8 @@ import { storage } from "@/lib/firebase"
 
 export default function QuizComp({quiz, index,setQuiz}) {
 
+  const fileInputRef = React.useRef(null);
+
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailSubmitStatus, setThumbnailSubmitStatus] = useState(4);
   const [thumbnailSubmitProgress, setThumbnailSubmitProgress] = useState(0);
@@ -161,6 +164,7 @@ export default function QuizComp({quiz, index,setQuiz}) {
 
   async function uploadThumbnail(e){
     // console.log("uploading")
+    console.log(e.target.files)
     setThumbnail((prev)=>e.target.files[0]);
     setThumbnailSubmitStatus(0);
     if(e.target.files[0].type != "image/png" && e.target.files[0].type != "image/jpeg"){
@@ -182,9 +186,12 @@ export default function QuizComp({quiz, index,setQuiz}) {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setThumbnailSubmitStatus(1);
           setQuiz(index,"Image",downloadURL);
+          fileInputRef.current.value = "";
         });
       }
     );
+    fileInputRef.current.value = "";
+    setThumbnail(null)
   }
 
   return (
@@ -201,7 +208,9 @@ export default function QuizComp({quiz, index,setQuiz}) {
                  accept="image/png, image/jpeg"
                  onChange={(e)=>{
                   uploadThumbnail(e);
+                  alert("Uploading Thumbnail")
                  }}
+                 ref={fileInputRef}
                  className="absolute bottom-0 left-0 opacity-0 z-20"
                  type='file'
                 />
@@ -234,7 +243,7 @@ export default function QuizComp({quiz, index,setQuiz}) {
         </div>
     </div>
     <div className='flex justify-between mt-2 gap-x-3'>
-        <RadioGroup className="w-full" defaultValue="A" onValueChange={(val)=>setQuiz(index,"Correct",val)}>
+        <RadioGroup className="w-full" defaultValue="A" value={quiz.Correct} onValueChange={(val)=>setQuiz(index,"Correct",val)}>
         Choose correct answer
         <div className='flex gap-x-3 w-full'>
             <div className="flex items-center space-x-2">
