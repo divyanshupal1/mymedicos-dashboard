@@ -23,6 +23,9 @@ import { v4 } from "uuid"
 
 export function TimelyQuiz({edit,speciality,quiz,id,reload=()=>{}}){
   const {toast} = useToast();
+
+  const [dialogOpen, setDialogOpen] = React.useState(false)
+
   const [quizTitle, setQuizTitle] = React.useState(quiz?quiz.title:'');
   const [data, setData] = React.useState(quiz?quiz.Data:[{Question: '', A: '', B: '', C: '', D: '', Correct: '',Description:"",Image:"",id:v4()}]);
   const [date, setDate] = React.useState();
@@ -92,6 +95,7 @@ export function TimelyQuiz({edit,speciality,quiz,id,reload=()=>{}}){
         title: 'Quiz Added',
       })
       reset();
+      setDialogOpen(false);
       reload();
     }).catch((e)=>{
         setSubmit(false);
@@ -100,8 +104,8 @@ export function TimelyQuiz({edit,speciality,quiz,id,reload=()=>{}}){
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Dialog open={dialogOpen}>
+      <DialogTrigger asChild onClick={()=>setDialogOpen(!dialogOpen)}>
         {edit?
           <div className="inline p-1 rounded-md hover:bg-slate-300"><MdEdit className='scale-125'/></div>
           :
@@ -109,11 +113,12 @@ export function TimelyQuiz({edit,speciality,quiz,id,reload=()=>{}}){
         }
       </DialogTrigger>
       <DialogContent className="sm:max-w-[580px]">
-        <DialogHeader>
+        <DialogHeader className={"bg-black relative"}>
           <DialogTitle>{edit?"Edit":"Add"} Quiz</DialogTitle>
           <DialogDescription>
           {edit?"Edit a quiz":"Add a new quiz"}  
           </DialogDescription>
+          <Button variant="secondary" onClick={()=>setDialogOpen(false)} className="absolute top-[-20px] right-[-15px] z-50 rounded-full">X</Button>
         </DialogHeader>
         <div className="grid gap-4 py-4 w-full">
             <div className="flex flex-col space-y-2">
