@@ -6,6 +6,9 @@ export async function GET(req,{params}) {
     const orderId = id[0];
     const docSnap = await db.collection('Orders').doc(orderId).get() ;
     const order = docSnap.data();
+    if(order.type == "medcoins"){
+        return new Response(JSON.stringify(order));
+    }
     const userSnap = await db.collection('users').doc(order.user).get();
     const user = userSnap.data()
     order.user = {

@@ -106,12 +106,16 @@ function Page({params}) {
                             <div className='font-medium'>{result.data.user["Email ID"]}</div>
                         </div>                        
                     </div>
-                    <div className=' font-medium p-3'>Order Items</div>
-                    <div className='flex flex-col justify-center items-center p-1 overflow-y-scroll'>
-                        {result.data.items.map((item,index)=>{
-                            return <ItemCard key={index} id={item}/>
-                        })}
-                    </div>
+                    {result.data.items && 
+                        <>
+                            <div className=' font-medium p-3'>Order Items</div>
+                            <div className='flex flex-col justify-center items-center p-1 overflow-y-scroll'>
+                                {result.data.items.map((item,index)=>{
+                                    return <ItemCard key={index} id={item}/>
+                                })}
+                            </div>
+                        </>
+                    }
 
                 </div>
                 
