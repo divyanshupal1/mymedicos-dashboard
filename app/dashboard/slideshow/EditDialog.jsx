@@ -73,11 +73,12 @@ export function EditDialog({reload,speciality}){
     async function Publish(){
       setPublishStatus(1);
       try{
-        const docRef = await addDoc(collection(db, "SlideShow","Speciality",speciality), {
+        const docRef = await addDoc(collection(db, "SlideShow"), {
           title:title,
           images:newData,
           file:fileUrl,
           type:type,
+          speciality:speciality,
         });
         toast({
           title: "Update Added!",

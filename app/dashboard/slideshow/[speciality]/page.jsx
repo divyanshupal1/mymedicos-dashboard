@@ -1,7 +1,7 @@
 "use client"
 import React,{useEffect} from 'react'
 import { db} from "@/lib/firebase"
-import { collection,getDocs} from "firebase/firestore"; 
+import { collection,getDocs,query,where} from "firebase/firestore"; 
 import { useToast } from '@/components/ui/use-toast';
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import Link from "next/link";
@@ -12,14 +12,16 @@ function Page({params}) {
  const {toast} = useToast();
 
  var speciality = params.speciality;
-speciality = urlMerger(speciality);
+ speciality = urlMerger(speciality);
  const [loading, setLoading] = React.useState(true)
  const [docs,setDocs]=React.useState([])
 
  async function LoadUpdates(){
     var temp=[];
     try{
-        const querySnapshot = await getDocs(collection(db, "SlideShow","Speciality",speciality));
+        // const querySnapshot = await getDocs(collection(db, "SlideShow","Speciality",speciality));
+        const q = query(collection(db, "SlideShow"),where("speciality","==",urlMerger(speciality)));
+        const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             temp = [...temp,[doc.id,doc.data()]]
        });    
@@ -29,7 +31,7 @@ speciality = urlMerger(speciality);
     catch(e){
        toast({
          variant: "destructive",
-         title: "Error Loading Publications",
+         title: "Error Loading SlideShow",
        })
     }
  }

@@ -8,9 +8,8 @@ export async function GET(Request,{params}){
         // var speciality = 'Anatomy'
         speciality = urlMerger(speciality)
         var temp = []
-        const querySnapshot = await getDocs(collection(db, "SlideShow",'Speciality',speciality));
-        // const querySnapshot = await admin.firestore().collection("SlideShow","Speciality",speciality).get();
-        // console.log(querySnapshot.docs.length)
+        const comparison = speciality.toLowerCase() === "all" ? "!=" : "==";
+        const querySnapshot = await admin.firestore().collection("SlideShow").where("speciality",comparison,speciality).get();
         querySnapshot.forEach((doc) => {
              temp = [...temp,doc.data()]
         });  
