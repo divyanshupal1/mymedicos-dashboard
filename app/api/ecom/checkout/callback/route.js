@@ -25,10 +25,12 @@ export async function POST(req,res){
 
     await axios.get(`${FRONTEND_HOST}/api/ecom/checkout/orderDetails/${razorpay_order_id}`)
     .then(async(response) => {
+        const user = await admin.firestore().collection("users").doc(response.data.user).get()
+        const user_id = user.id;
         if(response.data.type == "medcoins"){
             const db = admin.database();
             const ref = db.ref('profiles');
-            const usersRef = ref.child(`${response.data.user}/coins`);
+            const usersRef = ref.child(`${user.data().realtimeid}/coins`);
             switch (response.data.amount) {
                 case 99:
                     usersRef.transaction((current_value)=>{
@@ -50,8 +52,6 @@ export async function POST(req,res){
             }
         }
         else{
-            const user = await admin.firestore().collection("users").where("Phone Number", "==", response.data.user.phone).get()
-            const user_id = user.docs[0].id;
             var library = user.docs[0].data().library ? user.docs[0].data().library : [];
             console.log(library,"library");
             var newLibrary = [...library, ...response.data.items];
@@ -61,5 +61,5 @@ export async function POST(req,res){
         }
     })
 
-    return Response.redirect(`${FRONTEND_HOST}/checkout/success`);
+    return new Response(JSON.stringify({status: "success"}));
 }

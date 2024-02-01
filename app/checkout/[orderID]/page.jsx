@@ -65,6 +65,14 @@ function Page({params}) {
                 "razorpay_order_id": response.razorpay_order_id,
                 "razorpay_signature": response.razorpay_signature,
                 "orderID": params.orderID
+            }).then((res)=>{
+                if(res.data.status=="success"){
+                    alert("Payment Successful");
+                    window.location.href = `${FRONTEND_HOST}/checkout/success`
+                }else{
+                    alert("Payment Failed");
+                    window.location.href = `${FRONTEND_HOST}/checkout/failed`
+                }
             })
            },
           "prefill": {
