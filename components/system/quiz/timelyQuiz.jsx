@@ -27,18 +27,18 @@ export function TimelyQuiz({edit,speciality,quiz,id,reload=()=>{}}){
   const [dialogOpen, setDialogOpen] = React.useState(false)
 
   const [quizTitle, setQuizTitle] = React.useState(quiz?quiz.title:'');
-  const [data, setData] = React.useState(quiz?quiz.Data:[{Question: '', A: '', B: '', C: '', D: '', Correct: '',Description:"",Image:"",id:v4()}]);
+  const [data, setData] = React.useState(quiz?quiz.Data:[{Question: '', A: '', B: '', C: '', D: '', Correct: '',Description:"",Image:null,id:v4()}]);
   const [date, setDate] = React.useState();
   const [current, setCurrent] = React.useState(0);
   const [submit, setSubmit] = React.useState(false);
  
   function reset(){
-    setData(quiz?quiz.Data:[{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:"",id:v4()}]);
+    setData(quiz?quiz.Data:[{Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:null,id:v4()}]);
     setCurrent(0);
     setSubmit(false);
   }
   function addQuestion(){
-    setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:"",id:v4()}]);
+    setData([...data, {Question: '', A: '', B: '', C: '', D: '', Correct: 'A',Description:"",Image:null,id:v4()}]);
     setCurrent((prev)=>prev+1);
   }
   function setQuiz(index,field,value){
