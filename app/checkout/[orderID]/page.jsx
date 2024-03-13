@@ -53,7 +53,7 @@ function Page({params}) {
         const { amount, order_id, currency } = result.data;
     
         const options = {
-          "key": "rzp_test_v9goF6NcrK9Urn", // Enter the Key ID generated from the Dashboard
+          "key": "rzp_live_mgbdzdpY69jVbV", // Enter the Key ID generated from the Dashboard
           "amount":amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
           "currency": currency,
           "name": "MyMedicos",
