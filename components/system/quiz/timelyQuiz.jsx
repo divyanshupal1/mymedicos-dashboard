@@ -113,7 +113,7 @@ export function TimelyQuiz({edit,speciality,quiz,id,reload=()=>{}}){
         }
       </DialogTrigger>
       <DialogContent className="sm:max-w-[580px]">
-        <DialogHeader className={"bg-black relative"}>
+        <DialogHeader className={" relative"}>
           <DialogTitle>{edit?"Edit":"Add"} Quiz</DialogTitle>
           <DialogDescription>
           {edit?"Edit a quiz":"Add a new quiz"}  

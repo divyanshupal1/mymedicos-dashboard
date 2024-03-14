@@ -19,7 +19,7 @@ import {IoCloudDone} from "react-icons/io5"
 import {AiOutlineLoading3Quarters} from "react-icons/ai"
 import { ref,uploadBytesResumable,getDownloadURL } from "firebase/storage"
 import { db,storage } from "@/lib/firebase"
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc, doc , getDoc } from "firebase/firestore"; 
 import { v4 } from "uuid"
   
 export function AddNews({reload}) {  
@@ -35,8 +35,27 @@ export function AddNews({reload}) {
     const [URL, setURL] = useState("");
     const [publishStatus, setPublishStatus] = useState(0);
     const [val, setVal] = useState("News");
+    const [subject, setSubject] = useState("");
+    const [tag, setTag] = useState("All");
   
     const [flag, setFlag] = useState(false);
+    const [tags, setTags] = useState([]);
+
+    async function loadTags(){
+      let tags = [];
+      const tagRef = doc(db, "NewsTags", "5m4RrttJhW5PSaxy9KPB");
+      const tagDoc = await getDoc(tagRef);
+      if (tagDoc.exists()) {
+        const data = tagDoc.data();
+        tags = Object.keys(data).sort();
+      } else {
+        console.log("No such document!");
+      }
+      setTags(tags);
+    }
+    useEffect(()=>{
+      loadTags();
+    },[])
 
     function reset(){
       setDescription("");
@@ -88,6 +107,8 @@ export function AddNews({reload}) {
           thumbnail: thumbnailUrl,
           type: val,
           Time: new Date().toISOString(),
+          tag: tag,
+          subject: subject,
         });
         toast({
           title: "News Added",
@@ -110,7 +131,7 @@ export function AddNews({reload}) {
         <DialogTrigger asChild>
           <Button variant="secondary"  className="gap-x-2"><MdAdd className="scale-125"/> Add News</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] max-h-screen">
           <DialogHeader>
             <DialogTitle>Add News</DialogTitle>
           </DialogHeader>
@@ -122,6 +143,13 @@ export function AddNews({reload}) {
                 <Input id="title" placeholder="News Title" value={title} 
                   className={`${title.length > 1 ? "" : "outline outline-red-600"}`}
                   onChange={(e)=>setTitle(e.target.value)} 
+                />
+              </div>
+              <div className="flex flex-col space-y-2">
+                <Label htmlFor="title">Subject</Label>
+                <Input id="title" placeholder="Subject" value={subject} 
+                  className={`${title.length > 1 ? "" : "outline outline-red-600"}`}
+                  onChange={(e)=>setSubject(e.target.value)} 
                 />
               </div>
               <div className="flex flex-col space-y-2">
@@ -143,6 +171,10 @@ export function AddNews({reload}) {
                 <Label htmlFor="author">Link to Article</Label>
                 <Input id="author" placeholder="Link to news article" value={URL} onChange={(e)=>setURL(e.target.value)} />
               </div>
+              <div className="flex flex-col space-y-2">
+                <Label htmlFor="author">Tag</Label>
+                <SelectScrollable data={tags}/>
+              </div>
               <div className="flex flex-col space-y-1.5 relative">
                 <Label htmlFor="price">Select Thumbnail</Label>
                 <Input id="price"
@@ -158,9 +190,11 @@ export function AddNews({reload}) {
                   {thumbnailSubmitStatus == 0 && thumbnail && <AiOutlineLoading3Quarters className="text-green-600 font-bold animate-spin"/>}
                  </div>
               </div>
-              {thumbnailUrl.length > 0 && <div className="flex flex-col space-y-1.5 relative w-full h-52 rounded-md" style={{background:`url(${thumbnailUrl})`}}></div>}
-          
+
+              {/* {thumbnailUrl.length > 0 && <div className="flex flex-col space-y-1.5 relative w-full h-52 rounded-md" style={{background:`url(${thumbnailUrl})`}}></div>} */}
+              
             </div>
+
           </form>
           </div>
           <DialogFooter className={"items-center gap-x-4"}>
@@ -196,3 +230,24 @@ export function AddNews({reload}) {
       </ToggleGroup>
     )
   }
+
+
+   
+import {SelectGroup,SelectLabel} from "@/components/ui/select"
+ 
+export function SelectScrollable({data}) {
+  return (
+    <Select defaultValue="All">
+      <SelectTrigger className="w-full">
+        <SelectValue placeholder="Select a tag" />
+      </SelectTrigger>
+      <SelectContent>
+        {
+          data.map((item,index)=>(
+            <SelectItem key={index} value={item}>{item}</SelectItem>
+          ))
+        }      
+      </SelectContent>
+    </Select>
+  )
+}
